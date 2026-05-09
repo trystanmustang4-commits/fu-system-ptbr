@@ -53,5 +53,9 @@ export class FUItemSheet extends HandlebarsApplicationMixin(ApplicationV2) {
                   : el.value;
       this.document.update({ [el.name]: value });
     });
+    this.element.querySelector(".fu-clickable-img")?.addEventListener("click", () => {
+      if (!this.document.isOwner) return;
+      new FilePicker({ type: "image", current: this.document.img, callback: path => this.document.update({ img: path }) }).browse();
+    });
   }
 }

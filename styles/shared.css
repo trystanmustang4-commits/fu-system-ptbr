@@ -28,10 +28,6 @@
 /* Ensure [hidden] works inside Foundry's stylesheet context */
 .fabula-ultima [hidden] { display: none !important; }
 
-.fabula-ultima .fu-tab-body {
-  padding: 8px 4px;
-}
-
 .fabula-ultima .fu-tabs {
   display: flex;
   gap: 2px;

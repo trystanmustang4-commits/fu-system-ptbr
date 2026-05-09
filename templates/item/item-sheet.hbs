@@ -1,7 +1,7 @@
 {{!-- Item Sheet --}}
 <div class="fabula-ultima fu-item-sheet fu-theme-{{theme}}">
   <header class="fu-sheet-header">
-    <img class="fu-item-img" src="{{item.img}}" alt="{{item.name}}" data-edit="img">
+    <img class="fu-item-img fu-clickable-img" src="{{item.img}}" alt="{{item.name}}">
     <div class="fu-header-fields">
       <input class="fu-name-input" type="text" name="name"
              value="{{item.name}}" placeholder="Nome do item">
@@ -16,7 +16,10 @@
 
     {{!-- Description --}}
     <section class="fu-section">
-      <div class="fu-editor editor" data-edit="system.description">{{description}}</div>
+      <div class="fu-section-header"><h3>Descrição</h3></div>
+      <textarea name="system.description" rows="5"
+                style="width:100%;resize:vertical;font-family:inherit"
+                placeholder="Descrição do item...">{{system.description}}</textarea>
     </section>
 
     {{!-- Weapon fields --}}
@@ -84,6 +87,10 @@
             {{/each}}
           </select>
         </div>
+        <div class="form-group">
+          <label>Qualidade</label>
+          <input type="text" name="system.quality" value="{{system.quality}}" placeholder="Efeito especial...">
+        </div>
       </div>
     </section>
     {{/if}}
@@ -98,13 +105,77 @@
         <div class="form-group"><label>Marcial</label>
           <input type="checkbox" name="system.martial" {{#if system.martial}}checked{{/if}}></div>
         <div class="form-group"><label>DEF Fixo</label>
-          <input type="number" name="system.defFixed" value="{{system.defFixed}}" placeholder="(fórmula)"></div>
+          <input type="number" name="system.defFixed" value="{{system.defFixed}}" placeholder="Deixe vazio para usar atributo"></div>
+        <div class="form-group"><label>Attr DEF</label>
+          <select name="system.defFormula">
+            {{#each config.ATTRIBUTES}}
+            <option value="{{@key}}" {{#if (fu_is ../../system.defFormula @key)}}selected{{/if}}>{{@key}}</option>
+            {{/each}}
+          </select>
+        </div>
         <div class="form-group"><label>Bônus DEF</label>
           <input type="number" name="system.defBonus" value="{{system.defBonus}}"></div>
         <div class="form-group"><label>Bônus DEF.M</label>
           <input type="number" name="system.mdefBonus" value="{{system.mdefBonus}}"></div>
         <div class="form-group"><label>Mod. Iniciativa</label>
           <input type="number" name="system.initiativeModifier" value="{{system.initiativeModifier}}"></div>
+        <div class="form-group"><label>Qualidade</label>
+          <input type="text" name="system.quality" value="{{system.quality}}" placeholder="Efeito especial..."></div>
+      </div>
+    </section>
+    {{/if}}
+
+    {{!-- Shield fields --}}
+    {{#if isShield}}
+    <section class="fu-section">
+      <div class="fu-section-header"><h3>Escudo</h3></div>
+      <div class="fu-form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="form-group"><label>Custo</label>
+          <input type="number" name="system.cost" value="{{system.cost}}"></div>
+        <div class="form-group"><label>Marcial</label>
+          <input type="checkbox" name="system.martial" {{#if system.martial}}checked{{/if}}></div>
+        <div class="form-group"><label>Bônus DEF</label>
+          <input type="number" name="system.defBonus" value="{{system.defBonus}}"></div>
+        <div class="form-group"><label>Bônus DEF.M</label>
+          <input type="number" name="system.mdefBonus" value="{{system.mdefBonus}}"></div>
+        <div class="form-group"><label>Mod. Iniciativa</label>
+          <input type="number" name="system.initiativeModifier" value="{{system.initiativeModifier}}"></div>
+        <div class="form-group"><label>Qualidade</label>
+          <input type="text" name="system.quality" value="{{system.quality}}" placeholder="Efeito especial..."></div>
+      </div>
+    </section>
+    {{/if}}
+
+    {{!-- Class fields --}}
+    {{#if isClass}}
+    <section class="fu-section">
+      <div class="fu-section-header"><h3>Classe</h3></div>
+      <div class="fu-form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="form-group"><label>Fonte</label>
+          <input type="text" name="system.source" value="{{system.source}}" placeholder="Livro Básico..."></div>
+        <div class="form-group"><label>Nível</label>
+          <input type="number" name="system.level" value="{{system.level}}" min="1" max="10"></div>
+        <div class="form-group"><label>Bônus PV</label>
+          <input type="number" name="system.benefits.pv" value="{{system.benefits.pv}}"></div>
+        <div class="form-group"><label>Bônus PM</label>
+          <input type="number" name="system.benefits.pm" value="{{system.benefits.pm}}"></div>
+        <div class="form-group"><label>Bônus PI</label>
+          <input type="number" name="system.benefits.pi" value="{{system.benefits.pi}}"></div>
+      </div>
+    </section>
+    {{/if}}
+
+    {{!-- Power fields --}}
+    {{#if isPower}}
+    <section class="fu-section">
+      <div class="fu-section-header"><h3>Poder</h3></div>
+      <div class="fu-form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="form-group"><label>Fonte / Classe</label>
+          <input type="text" name="system.source" value="{{system.source}}" placeholder="Nome da classe..."></div>
+        <div class="form-group"><label>Nível Máximo</label>
+          <input type="number" name="system.maxLevel" value="{{system.maxLevel}}" min="1" max="10"></div>
+        <div class="form-group"><label>Nível Atual</label>
+          <input type="number" name="system.level" value="{{system.level}}" min="1" max="10"></div>
       </div>
     </section>
     {{/if}}
@@ -138,6 +209,47 @@
           <input type="checkbox" name="system.isOffensive" {{#if system.isOffensive}}checked{{/if}}></div>
         <div class="form-group"><label>Ritual</label>
           <input type="checkbox" name="system.isRitual" {{#if system.isRitual}}checked{{/if}}></div>
+        {{#if system.isOffensive}}
+        <div class="form-group"><label>Precisão Attr 1</label>
+          <select name="system.precision.0">
+            {{#each config.ATTRIBUTES}}
+            <option value="{{@key}}" {{#if (fu_is (lookup ../../system.precision 0) @key)}}selected{{/if}}>{{@key}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="form-group"><label>Precisão Attr 2</label>
+          <select name="system.precision.1">
+            {{#each config.ATTRIBUTES}}
+            <option value="{{@key}}" {{#if (fu_is (lookup ../../system.precision 1) @key)}}selected{{/if}}>{{@key}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="form-group"><label>Dano</label>
+          <input type="number" name="system.damage" value="{{system.damage}}"></div>
+        <div class="form-group"><label>Tipo de Dano</label>
+          <select name="system.damageType">
+            {{#each config.DAMAGE_TYPES}}
+            <option value="{{@key}}" {{#if (fu_is ../../system.damageType @key)}}selected{{/if}}>{{fu_localize this}}</option>
+            {{/each}}
+          </select>
+        </div>
+        {{/if}}
+      </div>
+    </section>
+    {{/if}}
+
+    {{!-- Consumable fields --}}
+    {{#if isConsumable}}
+    <section class="fu-section">
+      <div class="fu-section-header"><h3>Consumível</h3></div>
+      <div class="fu-form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="form-group"><label>Custo</label>
+          <input type="number" name="system.cost" value="{{system.cost}}"></div>
+        <div class="form-group"><label>Quantidade</label>
+          <input type="number" name="system.quantity" value="{{system.quantity}}" min="0"></div>
+        <div class="form-group" style="grid-column:1/-1"><label>Efeito</label>
+          <textarea name="system.effect" rows="3" style="width:100%;resize:vertical;font-family:inherit"
+                    placeholder="Efeito ao usar...">{{system.effect}}</textarea></div>
       </div>
     </section>
     {{/if}}

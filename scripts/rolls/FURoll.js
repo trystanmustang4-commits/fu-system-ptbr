@@ -35,6 +35,15 @@ export class FURoll {
 
     const result = new FURollResult({ roll, die1: r1, die2: r2, ra, total, critical, fumble, success, tnTarget, flavor, actor, bonus });
     await result.toChat({ rollMode });
+
+    if (critical && actor) {
+      const showOpp = game.settings.get(SYSTEM_ID, FU_CONFIG.SETTINGS.SHOW_OPPORTUNITY) ?? true;
+      if (showOpp) {
+        const { OpportunityDialog } = await import("../apps/OpportunityDialog.js");
+        OpportunityDialog.show(actor, result);
+      }
+    }
+
     return result;
   }
 
