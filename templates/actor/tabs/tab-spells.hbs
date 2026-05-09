@@ -1,0 +1,34 @@
+{{!-- Tab: Spells --}}
+<div class="fu-tab-body fu-scroll" data-tab="spells" data-group="primary">
+
+  <div class="fu-section-header">
+    <h3>Feitiços</h3>
+    <button class="fu-btn" type="button" data-action="createItem" data-type="spell">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
+
+  <div class="fu-item-list">
+  {{#each spells}}
+    <div class="fu-item-row" data-item-id="{{this.id}}">
+      <img class="item-img" src="{{this.img}}" alt="{{this.name}}">
+      <div style="flex:1">
+        <div class="item-name" data-action="editItem" style="cursor:pointer">{{this.name}}</div>
+        <div class="fu-muted" style="font-size:11px">
+          {{this.system.discipline}} · {{this.system.mpCost}} PM
+          {{#if this.system.isOffensive}} · {{fu_damage_label this.system.damageType}}{{/if}}
+        </div>
+      </div>
+      <div class="item-controls">
+        <a data-action="rollSpell"  title="Rolar Magia"><i class="fas fa-magic"></i></a>
+        <a data-action="useItem"    title="Ver"><i class="fas fa-book-open"></i></a>
+        <a data-action="editItem"   title="Editar"><i class="fas fa-edit"></i></a>
+        <a data-action="deleteItem" title="Excluir" class="fu-btn-danger"><i class="fas fa-trash"></i></a>
+      </div>
+    </div>
+  {{else}}
+    <p class="fu-muted fu-empty-notice">Nenhum feitiço aprendido.</p>
+  {{/each}}
+  </div>
+
+</div>

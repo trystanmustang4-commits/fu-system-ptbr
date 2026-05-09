@@ -1,0 +1,29 @@
+{{!-- Tab: Bonds (Laços) --}}
+<div class="fu-tab-body fu-scroll" data-tab="bonds" data-group="primary">
+
+  <div class="fu-section-header">
+    <h3>Laços</h3>
+  </div>
+
+  <div class="fu-bond-list">
+  {{#each system.bonds}}
+    <div class="fu-bond-card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <strong style="flex:1">{{#if this.name}}{{this.name}}{{else}}<em class="fu-muted">Laço {{@index}}</em>{{/if}}</strong>
+        <span class="fu-muted" style="font-size:11px">Força: {{this.strength}}</span>
+      </div>
+      <div class="fu-bond-emotions">
+        {{#if this.emotion1}}<span class="fu-bond-emotion-btn active">{{this.emotion1}}</span>{{/if}}
+        {{#if this.emotion2}}<span class="fu-bond-emotion-btn active">{{this.emotion2}}</span>{{/if}}
+        {{#if this.emotion3}}<span class="fu-bond-emotion-btn active">{{this.emotion3}}</span>{{/if}}
+        {{#unless this.emotion1}}{{#unless this.emotion2}}{{#unless this.emotion3}}
+          <em class="fu-muted" style="font-size:11px">Sem emoções definidas</em>
+        {{/unless}}{{/unless}}{{/unless}}
+      </div>
+    </div>
+  {{else}}
+    <p class="fu-muted fu-empty-notice">Nenhum Laço definido. Use o Criador de Personagem para adicionar Laços.</p>
+  {{/each}}
+  </div>
+
+</div>

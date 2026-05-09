@@ -1,0 +1,30 @@
+{
+  "Actor": {
+    "types": ["character", "group"],
+    "templates": {
+      "base": {
+        "biography": { "value": "" },
+        "notes": ""
+      }
+    },
+    "character": { "templates": ["base"] },
+    "group":     { "templates": ["base"] }
+  },
+  "Item": {
+    "types": ["weapon", "armor", "shield", "class", "power", "spell", "consumable", "misc"],
+    "templates": {
+      "base": {
+        "description": { "value": "" },
+        "source": ""
+      }
+    },
+    "weapon":     { "templates": ["base"] },
+    "armor":      { "templates": ["base"] },
+    "shield":     { "templates": ["base"] },
+    "class":      { "templates": ["base"] },
+    "power":      { "templates": ["base"] },
+    "spell":      { "templates": ["base"] },
+    "consumable": { "templates": ["base"] },
+    "misc":       { "templates": ["base"] }
+  }
+}

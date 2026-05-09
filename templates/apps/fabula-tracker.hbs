@@ -1,0 +1,83 @@
+{{!-- Fábula / Ultima Tracker HUD --}}
+<div class="fabula-ultima fu-tracker-body">
+
+  {{!-- Player characters --}}
+  <div class="fu-tracker-section">
+    <div class="fu-tracker-label">Pontos de Fábula</div>
+    {{#each playerChars}}
+    <div class="fu-tracker-row" data-actor-id="{{this.id}}">
+      <img src="{{this.img}}" alt="{{this.name}}" class="fu-tracker-avatar">
+      <span class="fu-tracker-name" title="{{this.name}}">{{this.name}}</span>
+      <div class="fu-tracker-controls">
+        <button class="fu-tracker-btn" type="button" data-action="adjustFabula" data-delta="-1">−</button>
+        <span class="fu-tracker-value">{{this.fabula}}</span>
+        <button class="fu-tracker-btn" type="button" data-action="adjustFabula" data-delta="1">+</button>
+      </div>
+    </div>
+    {{else}}
+    <p class="fu-muted" style="font-size:11px;text-align:center">Nenhum PJ no mundo.</p>
+    {{/each}}
+  </div>
+
+  {{!-- Villain Ultima points (GM only) --}}
+  {{#if isGM}}
+  {{#if villains}}
+  <div class="fu-tracker-section" style="margin-top:10px">
+    <div class="fu-tracker-label">Pontos de Ultima</div>
+    {{#each villains}}
+    <div class="fu-tracker-row" data-actor-id="{{this.id}}">
+      <img src="{{this.img}}" alt="{{this.name}}" class="fu-tracker-avatar">
+      <span class="fu-tracker-name" title="{{this.name}}">{{this.name}}</span>
+      <div class="fu-tracker-controls">
+        <button class="fu-tracker-btn" type="button" data-action="adjustUltima" data-delta="-1">−</button>
+        <span class="fu-tracker-value">{{this.ultimaPoints}}</span>
+        <button class="fu-tracker-btn" type="button" data-action="adjustUltima" data-delta="1">+</button>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
+  {{/if}}
+
+</div>
+
+<style>
+.fu-tracker-body { padding: 8px; }
+.fu-tracker-section { }
+.fu-tracker-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fu-color-text-muted, #8a7060);
+  margin-bottom: 4px;
+}
+.fu-tracker-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--fu-color-border, #c8a96e);
+}
+.fu-tracker-avatar {
+  width: 26px; height: 26px;
+  border-radius: 50%; border: none; object-fit: cover; flex-shrink: 0;
+}
+.fu-tracker-name { flex: 1; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fu-tracker-controls { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.fu-tracker-btn {
+  width: 22px; height: 22px;
+  border: 1px solid var(--fu-color-border, #c8a96e);
+  border-radius: 4px;
+  background: var(--fu-bg-btn, rgba(0,0,0,0.15));
+  color: var(--fu-color-text, #2c1d0e);
+  cursor: pointer; font-size: 14px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+}
+.fu-tracker-btn:hover { background: var(--fu-color-accent, #c8a96e); }
+.fu-tracker-value {
+  min-width: 28px; text-align: center;
+  font-size: 15px; font-weight: bold;
+  font-family: var(--fu-font-title, "Cinzel", serif);
+  color: var(--fu-color-stat-value, #2c1d0e);
+}
+</style>

@@ -1,0 +1,17 @@
+{{!-- Opportunity Dialog — shown on critical success --}}
+<div class="fabula-ultima fu-opportunity-dialog">
+  <p class="fu-opportunity-intro" style="font-size:13px;margin-bottom:10px">
+    {{#if actor}}<strong>{{actor.name}}</strong> obteve um{{else}}Você obteve um{{/if}}
+    <strong style="color:var(--fu-color-critical,#c8a000)">Sucesso Crítico!</strong>
+    Escolha uma Oportunidade:
+  </p>
+
+  <div class="fu-opportunity-list">
+    {{#each opportunities}}
+    <button class="fu-opportunity-btn" type="button"
+            data-action="chooseOpportunity" data-id="{{this.id}}">
+      {{this.label}}
+    </button>
+    {{/each}}
+  </div>
+</div>

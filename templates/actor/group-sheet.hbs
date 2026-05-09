@@ -1,0 +1,51 @@
+{{!-- Group Sheet --}}
+<div class="fabula-ultima fu-group-sheet fu-theme-{{theme}}">
+  <header class="fu-sheet-header">
+    <img class="fu-actor-img" src="{{actor.img}}" alt="{{actor.name}}" data-edit="img">
+    <div>
+      <h2>{{actor.name}}</h2>
+      <div class="fu-muted">
+        Fábula: {{system.fabula}} | Zênites: {{system.zeni}}
+      </div>
+    </div>
+  </header>
+
+  <section class="fu-section">
+    <div class="fu-section-header"><h3>Membros</h3></div>
+    <div class="fu-member-list fu-item-list">
+      {{#each members}}
+      <div class="fu-item-row">
+        <img class="item-img" src="{{this.img}}" alt="{{this.name}}">
+        <span class="item-name">{{this.name}}</span>
+        <span class="fu-muted" style="font-size:11px">
+          PV {{this.system.pv.value}}/{{this.system.pv.max}} ·
+          PM {{this.system.pm.value}}/{{this.system.pm.max}}
+        </span>
+      </div>
+      {{else}}
+        <p class="fu-muted fu-empty-notice">Nenhum membro adicionado.</p>
+      {{/each}}
+    </div>
+  </section>
+
+  <section class="fu-section">
+    <div class="fu-section-header"><h3>Laços do Grupo</h3></div>
+    <div class="fu-bond-list">
+      {{#each system.bonds}}
+      <div class="fu-bond-card">
+        <strong>{{this.from}}</strong> → <strong>{{this.to}}</strong>
+        <span class="fu-muted">[Força {{this.strength}}]</span>
+        <div class="fu-bond-emotions">
+          {{#if this.emotion1}}<span class="fu-bond-emotion-btn active">{{this.emotion1}}</span>{{/if}}
+          {{#if this.emotion2}}<span class="fu-bond-emotion-btn active">{{this.emotion2}}</span>{{/if}}
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </section>
+
+  <section class="fu-section">
+    <div class="fu-section-header"><h3>Notas do Grupo</h3></div>
+    <div class="fu-editor editor" data-edit="system.notes.value">{{notes}}</div>
+  </section>
+</div>

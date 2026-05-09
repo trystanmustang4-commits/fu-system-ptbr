@@ -1,0 +1,84 @@
+/* ── Tema JRPG — vibrante, inspirado em JRPGs clássicos ────────────────────── */
+/* Dark background, bright electric accents, anime-inspired aesthetic.         */
+
+.fu-theme-jrpg .fabula-ultima,
+.fu-theme-jrpg.fabula-ultima {
+  --fu-font-body:             "Segoe UI", "Noto Sans", sans-serif;
+  --fu-font-title:            "Cinzel", "Exo 2", "Orbitron", sans-serif;
+
+  --fu-bg-sheet:              #0f0f1a;
+  --fu-bg-tab:                rgba(80, 60, 140, 0.3);
+  --fu-bg-stat-box:           rgba(80, 60, 140, 0.2);
+  --fu-bg-item-row:           rgba(80, 60, 140, 0.15);
+  --fu-bg-input:              rgba(20, 20, 40, 0.7);
+  --fu-bg-btn:                rgba(80, 60, 140, 0.3);
+  --fu-bg-bar-track:          rgba(255, 255, 255, 0.08);
+  --fu-bg-badge-inactive:     rgba(80, 60, 140, 0.15);
+  --fu-bg-bond-card:          rgba(80, 60, 140, 0.12);
+  --fu-bg-dice:               rgba(80, 60, 140, 0.25);
+  --fu-bg-card:               rgba(15, 15, 26, 0.95);
+
+  --fu-color-text:            #e8e0f0;
+  --fu-color-text-muted:      #9080b0;
+  --fu-color-text-on-accent:  #0f0f1a;
+  --fu-color-title:           #b080ff;
+  --fu-color-stat-value:      #e8e0f0;
+
+  --fu-color-border:          #5030a0;
+  --fu-color-accent:          #9060e0;
+  --fu-color-accent-dark:     #6040b0;
+  --fu-color-dice:            #ffcc00;
+
+  --fu-color-pv:              #ff4060;
+  --fu-color-pm:              #4080ff;
+  --fu-color-pi:              #40cc80;
+
+  --fu-color-critical:        #ffcc00;
+  --fu-color-fumble:          #ff4060;
+
+  --fu-color-condition-active:#cc2040;
+  --fu-color-bond-active:     #8040cc;
+}
+
+/* Dark glowing border effect */
+.fu-theme-jrpg .window-app.fabula-ultima {
+  box-shadow: 0 0 20px rgba(144, 96, 224, 0.4),
+              0 0 40px rgba(144, 96, 224, 0.1);
+}
+
+.fu-theme-jrpg .window-app.fabula-ultima .window-content {
+  background: linear-gradient(160deg, #0f0f1a 0%, #1a0f2e 60%, #0a0a18 100%);
+}
+
+/* Glowing accent tabs */
+.fu-theme-jrpg .fu-tab-btn.active {
+  box-shadow: 0 0 8px rgba(144, 96, 224, 0.6);
+}
+
+/* Glowing stat boxes */
+.fu-theme-jrpg .fu-stat-box {
+  border-color: #5030a0;
+  box-shadow: inset 0 0 6px rgba(144, 96, 224, 0.15);
+}
+
+/* Glowing dice */
+.fu-theme-jrpg .fu-attr-die {
+  box-shadow: 0 0 8px rgba(255, 204, 0, 0.3);
+}
+
+.fu-theme-jrpg .fu-attr-die:hover {
+  box-shadow: 0 0 16px rgba(255, 204, 0, 0.6);
+}
+
+/* Sheet header */
+.fu-theme-jrpg .fu-sheet-header {
+  border-bottom: 2px solid #5030a0;
+  background: linear-gradient(to right, rgba(80,30,160,0.3), transparent);
+  padding: 10px 14px;
+}
+
+/* Critical effect */
+.fu-theme-jrpg .fu-roll-card.critical {
+  box-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
+  border-color: #ffcc00;
+}

@@ -1,0 +1,55 @@
+{{!-- Tab: Classes & Powers --}}
+<div class="fu-tab-body fu-scroll" data-tab="classes" data-group="primary">
+
+  {{!-- Class items --}}
+  <div class="fu-section-header">
+    <h3>Classes</h3>
+    <button class="fu-btn" type="button" data-action="createItem" data-type="class">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
+
+  <div class="fu-item-list">
+  {{#each classes}}
+    <div class="fu-item-row" data-item-id="{{this.id}}">
+      <img class="item-img" src="{{this.img}}" alt="{{this.name}}">
+      <span class="item-name" data-action="editItem">{{this.name}}</span>
+      <span class="fu-muted" style="font-size:12px">Nv {{this.system.level}}</span>
+      <div class="item-controls">
+        <a data-action="editItem"   title="Editar"><i class="fas fa-edit"></i></a>
+        <a data-action="deleteItem" title="Excluir" class="fu-btn-danger"><i class="fas fa-trash"></i></a>
+      </div>
+    </div>
+  {{else}}
+    <p class="fu-muted fu-empty-notice">Nenhuma classe adicionada.</p>
+  {{/each}}
+  </div>
+
+  {{!-- Power items --}}
+  <div class="fu-section-header" style="margin-top:14px">
+    <h3>Poderes</h3>
+    <button class="fu-btn" type="button" data-action="createItem" data-type="power">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
+
+  <div class="fu-item-list">
+  {{#each powers}}
+    <div class="fu-item-row" data-item-id="{{this.id}}">
+      <img class="item-img" src="{{this.img}}" alt="{{this.name}}">
+      <span class="item-name" data-action="editItem">{{this.name}}</span>
+      <span class="fu-muted" style="font-size:11px">
+        Nv {{this.system.level}}/{{this.system.maxLevel}}
+      </span>
+      <div class="item-controls">
+        <a data-action="useItem"    title="Ver"><i class="fas fa-book-open"></i></a>
+        <a data-action="editItem"   title="Editar"><i class="fas fa-edit"></i></a>
+        <a data-action="deleteItem" title="Excluir" class="fu-btn-danger"><i class="fas fa-trash"></i></a>
+      </div>
+    </div>
+  {{else}}
+    <p class="fu-muted fu-empty-notice">Nenhum poder adicionado.</p>
+  {{/each}}
+  </div>
+
+</div>

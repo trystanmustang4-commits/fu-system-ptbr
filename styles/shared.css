@@ -1,0 +1,442 @@
+/* ── Fabula Ultima — Shared base CSS ───────────────────────────────────────── */
+/* CSS custom properties defined per theme; this file uses them.               */
+
+/* ── Reset & layout ─────────────────────────────────────────────────────────── */
+.fabula-ultima * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.fabula-ultima {
+  font-family: var(--fu-font-body, "Palatino Linotype", Palatino, serif);
+  color: var(--fu-color-text, #2c1d0e);
+  background: var(--fu-bg-sheet, #f5f0e8);
+}
+
+/* ── Typography ──────────────────────────────────────────────────────────────── */
+.fabula-ultima h1,
+.fabula-ultima h2,
+.fabula-ultima h3 {
+  font-family: var(--fu-font-title, "Cinzel", serif);
+  color: var(--fu-color-title, #8b1a1a);
+  letter-spacing: 0.04em;
+}
+
+/* ── Tabs ────────────────────────────────────────────────────────────────────── */
+
+/* Ensure [hidden] works inside Foundry's stylesheet context */
+.fabula-ultima [hidden] { display: none !important; }
+
+.fabula-ultima .fu-tab-body {
+  padding: 8px 4px;
+}
+
+.fabula-ultima .fu-tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 2px solid var(--fu-color-border, #c8a96e);
+  padding-bottom: 0;
+  flex-wrap: wrap;
+}
+
+.fabula-ultima .fu-tab-btn {
+  padding: 6px 14px;
+  background: var(--fu-bg-tab, rgba(0,0,0,0.15));
+  color: var(--fu-color-text-muted, #8a7060);
+  border: 1px solid var(--fu-color-border, #c8a96e);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: var(--fu-font-title, "Cinzel", serif);
+  transition: background 0.2s, color 0.2s;
+}
+
+.fabula-ultima .fu-tab-btn.active,
+.fabula-ultima .fu-tab-btn:hover {
+  background: var(--fu-color-accent, #c8a96e);
+  color: var(--fu-color-text-on-accent, #1a0e05);
+}
+
+/* ── Resource bars ───────────────────────────────────────────────────────────── */
+.fu-bar-track {
+  width: 100%;
+  height: 12px;
+  background: var(--fu-bg-bar-track, rgba(0,0,0,0.3));
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.fu-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+
+.fu-bar-fill.pv  { background: var(--fu-color-pv,  #e05555); }
+.fu-bar-fill.pm  { background: var(--fu-color-pm,  #5577e0); }
+.fu-bar-fill.pi  { background: var(--fu-color-pi,  #55a055); }
+
+/* ── Stat grid ───────────────────────────────────────────────────────────────── */
+.fu-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 8px;
+}
+
+.fu-stat-box {
+  background: var(--fu-bg-stat-box, rgba(0,0,0,0.12));
+  border: 1px solid var(--fu-color-border, #c8a96e);
+  border-radius: 6px;
+  text-align: center;
+  padding: 6px 4px;
+}
+
+.fu-stat-box .label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fu-color-text-muted, #8a7060);
+}
+
+.fu-stat-box .value {
+  font-size: 22px;
+  font-family: var(--fu-font-title, "Cinzel", serif);
+  color: var(--fu-color-stat-value, #2c1d0e);
+  font-weight: bold;
+}
+
+/* ── Condition badges ────────────────────────────────────────────────────────── */
+.fu-conditions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.fu-condition-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  cursor: pointer;
+  border: 1px solid var(--fu-color-border, #c8a96e);
+  background: var(--fu-bg-badge-inactive, rgba(0,0,0,0.08));
+  color: var(--fu-color-text-muted, #8a7060);
+  transition: background 0.2s, color 0.2s;
+  user-select: none;
+}
+
+.fu-condition-badge.active {
+  background: var(--fu-color-condition-active, #c04040);
+  color: #fff;
+  border-color: #8b1a1a;
+}
+
+.fu-condition-badge img {
+  width: 14px;
+  height: 14px;
+  border: none;
+  object-fit: contain;
+}
+
+/* ── Item rows ───────────────────────────────────────────────────────────────── */
+.fu-item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fu-item-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: var(--fu-bg-item-row, rgba(0,0,0,0.06));
+  border: 1px solid var(--fu-color-border, #c8a96e);
+  border-radius: 4px;
+}
+
+.fu-item-row .item-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 3px;
+  object-fit: cover;
+  border: none;
+  flex-shrink: 0;
+}
+
+.fu-item-row .item-name {
+  flex: 1;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.fu-item-row .item-name:hover {
+  text-decoration: underline;
+}
+
+.fu-item-row .item-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.fu-item-row .item-controls a {
+  color: var(--fu-color-text-muted, #8a7060);
+  padding: 2px 4px;
+  font-size: 12px;
+}
+
+.fu-item-row .item-controls a:hover {
+  color: var(--fu-color-accent, #c8a96e);
+}
+
+.fu-item-row .equipped-toggle {
+  color: var(--fu-color-text-muted, #8a7060);
+  cursor: pointer;
+}
+
+.fu-item-row .equipped-toggle.equipped {
+  color: var(--fu-color-accent, #c8a96e);
+}
+
+/* ── Attribute dice ──────────────────────────────────────────────────────────── */
+.fu-attr-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.fu-attr-cell {
+  text-align: center;
+}
+
+.fu-attr-cell .attr-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fu-color-text-muted, #8a7060);
+  margin-bottom: 4px;
+}
+
+.fu-attr-die {
+  font-size: 28px;
+  font-family: var(--fu-font-title, "Cinzel", serif);
+  font-weight: bold;
+  color: var(--fu-color-dice, #c8a96e);
+  cursor: pointer;
+  width: 64px;
+  height: 64px;
+  border: 2px solid var(--fu-color-border, #c8a96e);
+  border-radius: 8px;
+  background: var(--fu-bg-dice, rgba(0,0,0,0.12));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  transition: background 0.2s, transform 0.1s;
+  user-select: none;
+}
+
+.fu-attr-die:hover {
+  background: var(--fu-color-accent, #c8a96e);
+  color: var(--fu-color-text-on-accent, #1a0e05);
+  transform: scale(1.05);
+}
+
+/* ── Bonds ───────────────────────────────────────────────────────────────────── */
+.fu-bond-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fu-bond-card {
+  padding: 10px 12px;
+  border: 1px solid var(--fu-color-border, #c8a96e);
+  border-radius: 6px;
+  background: var(--fu-bg-bond-card, rgba(0,0,0,0.06));
+}
+
+.fu-bond-emotions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.fu-bond-emotion-btn {
+  padding: 3px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--fu-color-border, #c8a96e);
+  background: transparent;
+  color: var(--fu-color-text-muted, #8a7060);
+  cursor: pointer;
+  font-size: 11px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.fu-bond-emotion-btn.active {
+  background: var(--fu-color-bond-active, #6b4fa0);
+  color: #fff;
+  border-color: #4a3070;
+}
+
+/* ── Chat cards ──────────────────────────────────────────────────────────────── */
+.fu-roll-card {
+  background: var(--fu-bg-card, rgba(0,0,0,0.08));
+  border: 1px solid var(--fu-color-border, #c8a96e);
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.fu-roll-card .dice-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.fu-roll-card .die-face {
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--fu-color-border, #c8a96e);
+  border-radius: 6px;
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--fu-bg-stat-box, rgba(0,0,0,0.12));
+}
+
+.fu-roll-card .die-face.ra-die {
+  border-color: var(--fu-color-accent, #c8a96e);
+  background: var(--fu-color-accent, #c8a96e);
+  color: var(--fu-color-text-on-accent, #1a0e05);
+}
+
+.fu-roll-card .total {
+  font-size: 28px;
+  text-align: center;
+  font-family: var(--fu-font-title, "Cinzel", serif);
+  font-weight: bold;
+}
+
+.fu-roll-card.critical .total { color: var(--fu-color-critical, #ffd700); }
+.fu-roll-card.fumble   .total { color: var(--fu-color-fumble,   #cc3333); }
+
+/* ── Inputs ──────────────────────────────────────────────────────────────────── */
+.fabula-ultima input[type="text"],
+.fabula-ultima input[type="number"],
+.fabula-ultima select,
+.fabula-ultima textarea {
+  background: var(--fu-bg-input, rgba(255,255,255,0.15));
+  border: 1px solid var(--fu-color-border, #c8a96e);
+  border-radius: 4px;
+  color: var(--fu-color-text, #2c1d0e);
+  padding: 4px 6px;
+  font-family: inherit;
+  font-size: 13px;
+  width: 100%;
+}
+
+.fabula-ultima input[type="number"] {
+  text-align: center;
+  width: 60px;
+}
+
+/* ── Section headers ─────────────────────────────────────────────────────────── */
+.fu-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 12px 0 6px;
+  border-bottom: 1px solid var(--fu-color-border, #c8a96e);
+  padding-bottom: 4px;
+}
+
+.fu-section-header h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────────── */
+.fu-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--fu-color-border, #c8a96e);
+  border-radius: 4px;
+  background: var(--fu-bg-btn, rgba(0,0,0,0.15));
+  color: var(--fu-color-text, #2c1d0e);
+  cursor: pointer;
+  font-size: 12px;
+  font-family: var(--fu-font-title, "Cinzel", serif);
+  transition: background 0.2s;
+}
+
+.fu-btn:hover {
+  background: var(--fu-color-accent, #c8a96e);
+  color: var(--fu-color-text-on-accent, #1a0e05);
+}
+
+.fu-btn-primary {
+  background: var(--fu-color-accent, #c8a96e);
+  color: var(--fu-color-text-on-accent, #1a0e05);
+  border-color: var(--fu-color-accent-dark, #a07840);
+}
+
+.fu-btn-primary:hover {
+  background: var(--fu-color-accent-dark, #a07840);
+}
+
+.fu-btn-danger {
+  color: #cc3333;
+  border-color: #cc3333;
+}
+
+.fu-btn-danger:hover { background: #cc3333; color: #fff; }
+
+/* ── Crisis indicator ────────────────────────────────────────────────────────── */
+.fu-in-crisis .fu-bar-fill.pv { background: #e05555; animation: crisis-pulse 1.5s infinite; }
+
+@keyframes crisis-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+/* ── Opportunity dialog ──────────────────────────────────────────────────────── */
+.fu-opportunity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fu-opportunity-btn {
+  padding: 8px 12px;
+  background: var(--fu-bg-item-row, rgba(0,0,0,0.06));
+  border: 1px solid var(--fu-color-border, #c8a96e);
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 13px;
+  transition: background 0.15s;
+}
+
+.fu-opportunity-btn:hover {
+  background: var(--fu-color-accent, #c8a96e);
+  color: var(--fu-color-text-on-accent, #1a0e05);
+}
+
+/* ── Scrollable areas ────────────────────────────────────────────────────────── */
+.fu-scroll {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--fu-color-border, #c8a96e) transparent;
+}
+
+.fu-scroll::-webkit-scrollbar { width: 6px; }
+.fu-scroll::-webkit-scrollbar-thumb { background: var(--fu-color-border, #c8a96e); border-radius: 3px; }

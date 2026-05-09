@@ -1,0 +1,57 @@
+{{!-- FU Roll Card — themed chat message --}}
+<div class="fu-roll-card {{#if critical}}critical{{else}}{{#if fumble}}fumble{{/if}}{{/if}}">
+  <div class="card-header">
+    {{#if actor}}<img src="{{actor.img}}" alt="" style="width:24px;height:24px;border-radius:50%;border:none;object-fit:cover;">{{/if}}
+    <span>{{#if flavor}}{{flavor}}{{else}}Teste{{/if}}</span>
+    {{#if critical}}<span style="margin-left:auto">✦ CRÍTICO ✦</span>{{/if}}
+    {{#if fumble}}<span style="margin-left:auto">✕ FALHA CRÍTICA ✕</span>{{/if}}
+  </div>
+
+  <div class="card-body">
+    {{!-- Dice display --}}
+    <div class="fu-chat-dice">
+      <div class="fu-chat-die {{#if (fu_is die1 ra)}}is-ra{{/if}}">
+        {{die1}}
+        <span class="die-label">{{#if (fu_is die1 ra)}}RA{{else}}D1{{/if}}</span>
+      </div>
+      <div class="fu-chat-die {{#if (fu_and (fu_is die2 ra) (fu_not (fu_is die1 die2)))}}is-ra{{/if}}">
+        {{die2}}
+        <span class="die-label">{{#if (fu_and (fu_is die2 ra) (fu_not (fu_is die1 die2)))}}RA{{else}}D2{{/if}}</span>
+      </div>
+    </div>
+
+    {{!-- Total --}}
+    <div class="roll-total">{{total}}</div>
+
+    {{!-- Result badge --}}
+    {{#if critical}}
+      <div class="result-badge critical">Sucesso Crítico!</div>
+    {{else if fumble}}
+      <div class="result-badge fumble">Falha Crítica!</div>
+    {{else if (fu_not (fu_is success null))}}
+      {{#if success}}
+        <div class="result-badge success">Sucesso (ND {{tnTarget}})</div>
+      {{else}}
+        <div class="result-badge failure">Falha (ND {{tnTarget}})</div>
+      {{/if}}
+    {{/if}}
+
+    {{!-- RA info --}}
+    <div style="text-align:center;font-size:11px;color:var(--fu-color-text-muted);">
+      RA: {{ra}}
+    </div>
+  </div>
+
+  {{!-- Apply damage button (shown when targets are selected) --}}
+  {{#if damage}}
+  <div class="card-footer">
+    <button class="fu-btn fu-btn-primary" type="button"
+            data-action="applyDamage"
+            data-amount="{{damage}}"
+            data-type="{{damageType}}">
+      <i class="fas fa-heart-broken"></i>
+      Aplicar {{damage}} dano ({{fu_damage_label damageType}})
+    </button>
+  </div>
+  {{/if}}
+</div>

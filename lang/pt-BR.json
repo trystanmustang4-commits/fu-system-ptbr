@@ -1,0 +1,207 @@
+{
+  "FABULA_ULTIMA": {
+    "ModuleTitle":  "Fabula Ultima",
+    "OpenCreator":  "Criar Personagem FU",
+
+    "Sheet": {
+      "Title":       "Ficha de Personagem",
+      "GroupTitle":  "Ficha de Grupo",
+      "Character":   "Ficha FU – Personagem",
+      "Group":       "Ficha FU – Grupo",
+      "Item":        "Item FU",
+      "TabMain":     "Principal",
+      "TabClasses":  "Classes",
+      "TabEquipment":"Equipamento",
+      "TabSpells":   "Feitiços",
+      "TabBonds":    "Laços",
+      "TabBio":      "Biografia"
+    },
+
+    "Steps": {
+      "Identity":    "Identidade",
+      "Classes":     "Classes",
+      "Attributes":  "Atributos",
+      "Equipment":   "Equipamento",
+      "Bonds":       "Laços",
+      "Review":      "Revisão"
+    },
+
+    "Attributes": {
+      "des": "Destreza",
+      "vig": "Vigor",
+      "ast": "Astúcia",
+      "von": "Vontade"
+    },
+
+    "Stats": {
+      "pv":         "Pontos de Vida",
+      "pm":         "Pontos de Mana",
+      "pi":         "Pontos de Inventário",
+      "def":        "Defesa",
+      "mdef":       "Defesa Mágica",
+      "initiative": "Iniciativa",
+      "crisis":     "Crise",
+      "level":      "Nível",
+      "fabula":     "Pontos de Fábula",
+      "zeni":       "Zênites"
+    },
+
+    "Themes": {
+      "ambicao":       "Ambição",
+      "raiva":         "Raiva",
+      "pertencimento": "Pertencimento",
+      "duvida":        "Dúvida",
+      "dever":         "Dever",
+      "culpa":         "Culpa",
+      "esperanca":     "Esperança",
+      "justica":       "Justiça",
+      "piedade":       "Piedade",
+      "vinganca":      "Vingança"
+    },
+
+    "Equipment": {
+      "budget":  "Orçamento",
+      "martial": "Marcial",
+      "hands1":  "1 mão",
+      "hands2":  "2 mãos",
+      "melee":   "Corpo a corpo",
+      "ranged":  "À distância"
+    },
+
+    "Bonds": {
+      "admiration": "Admiração",
+      "inferiority":"Inferioridade",
+      "loyalty":    "Lealdade",
+      "distrust":   "Desconfiança",
+      "affection":  "Afeto",
+      "hate":       "Ódio",
+      "strength":   "Força",
+      "add":        "Adicionar Laço"
+    },
+
+    "Conditions": {
+      "shaken":      "Abalado",
+      "stunned":     "Atordoado",
+      "weak":        "Fraco",
+      "slow":        "Lento",
+      "poisoned":    "Envenenado",
+      "unconscious": "Inconsciente",
+      "Applied":     "ficou",
+      "Removed":     "não está mais"
+    },
+
+    "DamageTypes": {
+      "physical": "Físico",
+      "air":      "Ar",
+      "bolt":     "Raio",
+      "dark":     "Trevas",
+      "earth":    "Terra",
+      "fire":     "Fogo",
+      "ice":      "Gelo",
+      "light":    "Luz",
+      "poison":   "Veneno"
+    },
+
+    "Species": {
+      "human":     "Humano",
+      "beast":     "Fera",
+      "construct": "Construto",
+      "demon":     "Demônio",
+      "elemental": "Elemental",
+      "fairy":     "Fada",
+      "monster":   "Monstro",
+      "plant":     "Planta",
+      "undead":    "Morto-vivo"
+    },
+
+    "Buttons": {
+      "prev":   "← Anterior",
+      "next":   "Próximo →",
+      "create": "✅ Criar Personagem"
+    },
+
+    "Notifications": {
+      "created":            "Personagem \"{name}\" criado com sucesso!",
+      "maxClasses":         "Um personagem pode ter no máximo 3 classes.",
+      "maxBonds":           "Máximo de 6 Laços atingido.",
+      "levelMismatch":      "Distribua exatamente 5 níveis entre as classes.",
+      "noName":             "Insira o nome do personagem.",
+      "noIdentity":         "Insira a Identidade do personagem.",
+      "noClasses":          "Escolha pelo menos 2 classes.",
+      "noPowers":           "Escolha {n} poder(es) para {class}.",
+      "noAttributes":       "Atribua o dado de cada Atributo.",
+      "insufficientBudget": "Orçamento insuficiente. Faltam {amount} z.",
+      "needMartialMelee":   "Você precisa de uma classe que permita equipar armas corpo a corpo marciais.",
+      "needMartialRanged":  "Você precisa de uma classe que permita equipar armas à distância marciais.",
+      "needMartialArmor":   "Você precisa de uma classe que permita equipar armaduras marciais.",
+      "needMartialShield":  "Você precisa de uma classe que permita equipar escudos marciais."
+    },
+
+    "Tracker": {
+      "Title": "Pontos de Fábula / Ultima"
+    },
+
+    "Opportunity": {
+      "Title":           "Oportunidade — Sucesso Crítico!",
+      "Used":            "{name} usou a oportunidade: {label}",
+      "RecoverPV":       "Recuperar PV (nível + bônus)",
+      "RecoverPM":       "Recuperar PM (nível + bônus)",
+      "FullRecovery":    "Recuperação total de PV e PM",
+      "ExtraAction":     "Ação extra neste turno",
+      "RemoveCondition": "Remover uma condição (aliado ou si mesmo)",
+      "ApplyCondition":  "Aplicar uma condição (inimigo)",
+      "BoostNext":       "Próximo teste com bônus +5",
+      "DamageBonus":     "Próximo ataque causa +5 dano",
+      "IgnoreDEF":       "Próximo ataque ignora DEF do alvo",
+      "Custom":          "Oportunidade personalizada (acordo com o mestre)"
+    },
+
+    "Crisis": {
+      "Entered": "{name} está em crise!"
+    },
+
+    "Combat": {
+      "DamageApplied":  "{name} recebeu {amount} de dano ({type}).",
+      "NoTargets":      "Selecione alvos com tokens antes de aplicar dano.",
+      "InsufficientMP": "{name} não tem PM suficiente."
+    },
+
+    "Settings": {
+      "ThemeName":  "Tema Visual",
+      "ThemeHint":  "Escolha entre o tema fiel ao livro brasileiro ou o tema JRPG vibrante.",
+      "ThemeLivro": "Livro (fiel à edição brasileira)",
+      "ThemeJRPG":  "JRPG (vibrante e animado)",
+
+      "automationDamageName":     "Aplicar Dano Automaticamente",
+      "automationDamageHint":     "Ao clicar em 'Aplicar Dano' no card de rolagem, aplica automaticamente nos alvos selecionados.",
+      "automationConditionsName": "Aplicar Condições Automaticamente",
+      "automationConditionsHint": "Quando o sistema detecta condições sendo aplicadas, atualiza o personagem automaticamente.",
+      "automationCrisisName":     "Notificar Crise",
+      "automationCrisisHint":     "Exibe mensagem no chat quando um personagem entra em crise.",
+      "automationManaName":       "Gastar PM ao Lançar Feitiço",
+      "automationManaHint":       "Deduz automaticamente o custo em PM ao usar um feitiço.",
+      "showOpportunityName":      "Mostrar Dialog de Oportunidade",
+      "showOpportunityHint":      "Exibe o diálogo de oportunidades quando ocorre um sucesso crítico."
+    },
+
+    "NewItem":       "Novo {type}",
+    "ConfirmDelete": "Excluir \"{name}\"? Esta ação não pode ser desfeita."
+  },
+
+  "TYPES": {
+    "Actor": {
+      "character": "Personagem",
+      "group":     "Grupo"
+    },
+    "Item": {
+      "weapon":     "Arma",
+      "armor":      "Armadura",
+      "shield":     "Escudo",
+      "class":      "Classe",
+      "power":      "Poder",
+      "spell":      "Feitiço",
+      "consumable": "Consumível",
+      "misc":       "Item Diverso"
+    }
+  }
+}

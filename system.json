@@ -1,0 +1,72 @@
+{
+  "id": "fabula-ultima",
+  "title": "Fabula Ultima",
+  "description": "Sistema completo de Fabula Ultima para Foundry VTT — edição brasileira. Inclui criação guiada de personagens, ficha completa, rolagens automáticas e automação de combate.",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "12",
+    "verified": "13",
+    "maximum": "14"
+  },
+  "authors": [
+    { "name": "", "email": "" }
+  ],
+  "esmodules": ["scripts/main.js"],
+  "styles": [
+    "styles/shared.css",
+    "styles/themes/livro.css",
+    "styles/themes/jrpg.css",
+    "styles/components/bars.css",
+    "styles/components/dice.css",
+    "styles/components/conditions.css",
+    "styles/components/chat.css"
+  ],
+  "languages": [
+    {
+      "lang": "pt-BR",
+      "name": "Português (Brasil)",
+      "path": "lang/pt-BR.json"
+    }
+  ],
+  "packs": [
+    {
+      "name": "classes",
+      "label": "Classes",
+      "path": "packs/classes",
+      "type": "Item",
+      "system": "fabula-ultima"
+    },
+    {
+      "name": "weapons",
+      "label": "Armas",
+      "path": "packs/weapons",
+      "type": "Item",
+      "system": "fabula-ultima"
+    },
+    {
+      "name": "armors",
+      "label": "Armaduras e Escudos",
+      "path": "packs/armors",
+      "type": "Item",
+      "system": "fabula-ultima"
+    },
+    {
+      "name": "spells",
+      "label": "Feitiços",
+      "path": "packs/spells",
+      "type": "Item",
+      "system": "fabula-ultima"
+    },
+    {
+      "name": "npcs",
+      "label": "NPCs e Vilões",
+      "path": "packs/npcs",
+      "type": "Actor",
+      "system": "fabula-ultima"
+    }
+  ],
+  "socket": true,
+  "url": "https://github.com/trystanmustang4-commits/fu-system-ptbr",
+  "manifest": "https://raw.githubusercontent.com/trystanmustang4-commits/fu-system-ptbr/main/system.json",
+  "download": "https://github.com/trystanmustang4-commits/fu-system-ptbr/archive/refs/heads/main.zip"
+}

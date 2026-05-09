@@ -1,0 +1,73 @@
+/* ── Dice display components ─────────────────────────────────────────────────── */
+
+/* Animated die face cycling in the creator */
+.fu-die-cycle {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+}
+
+.fu-die-cycle::after {
+  content: attr(data-die);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-family: var(--fu-font-title, "Cinzel", serif);
+  font-weight: bold;
+  color: var(--fu-color-dice, #c8a96e);
+  border: 2px solid var(--fu-color-border, #c8a96e);
+  border-radius: 8px;
+  background: var(--fu-bg-dice, rgba(0,0,0,0.12));
+  transition: background 0.15s, transform 0.1s;
+}
+
+.fu-die-cycle:hover::after {
+  background: var(--fu-color-accent, #c8a96e);
+  color: var(--fu-color-text-on-accent, #1a0e05);
+  transform: scale(1.05);
+}
+
+/* Chat roll dice display */
+.fu-chat-dice {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 10px 0;
+}
+
+.fu-chat-die {
+  width: 52px;
+  height: 52px;
+  border: 2px solid var(--fu-color-border, #c8a96e);
+  border-radius: 8px;
+  font-size: 26px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--fu-bg-stat-box, rgba(0,0,0,0.12));
+  color: var(--fu-color-stat-value, #2c1d0e);
+  position: relative;
+}
+
+.fu-chat-die.is-ra {
+  border-color: var(--fu-color-accent, #c8a96e);
+  background: var(--fu-color-accent, #c8a96e);
+  color: var(--fu-color-text-on-accent, #1a0e05);
+}
+
+.fu-chat-die .die-label {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fu-color-text-muted, #8a7060);
+  white-space: nowrap;
+}

@@ -1,0 +1,58 @@
+{{!-- Tab: Biography & Notes --}}
+<div class="fu-tab-body fu-scroll" data-tab="biography" data-group="primary">
+
+  <section class="fu-section">
+    <div class="fu-section-header"><h3>Identidade</h3></div>
+    <div class="fu-bio-fields">
+      <div class="form-group">
+        <label>Aparência</label>
+        <textarea name="system.appearance" rows="3">{{system.appearance}}</textarea>
+      </div>
+      <div class="form-group">
+        <label>Tema</label>
+        <input type="text" name="system.theme" value="{{system.theme}}">
+      </div>
+      <div class="form-group">
+        <label>Origem</label>
+        <input type="text" name="system.origin" value="{{system.origin}}">
+      </div>
+      <div class="form-group">
+        <label>Espécie</label>
+        <input type="text" name="system.species" value="{{system.species}}">
+      </div>
+    </div>
+  </section>
+
+  <section class="fu-section">
+    <div class="fu-section-header"><h3>Biografia</h3></div>
+    <textarea name="system.biography.value" rows="8" style="width:100%;resize:vertical;font-family:inherit">{{system.biography.value}}</textarea>
+  </section>
+
+  <section class="fu-section">
+    <div class="fu-section-header"><h3>Notas</h3></div>
+    <textarea name="system.notes.value" rows="6" style="width:100%;resize:vertical;font-family:inherit">{{system.notes.value}}</textarea>
+  </section>
+
+  {{#if isVillain}}
+  <section class="fu-section">
+    <div class="fu-section-header"><h3>Vilão</h3></div>
+    <div class="fu-stat-grid">
+      <div class="fu-stat-box">
+        <div class="label">Pontos de Ultima</div>
+        <div class="value">
+          <input type="number" name="system.ultimaPoints"
+                 value="{{system.ultimaPoints}}" min="0" style="font-size:20px;width:60px">
+        </div>
+      </div>
+      <div class="fu-stat-box">
+        <div class="label">Fase do Vilão</div>
+        <div class="value">
+          <input class="resource-input" type="number" name="system.villainPhase"
+                 value="{{system.villainPhase}}" min="1" max="5" style="font-size:20px;width:50px">
+        </div>
+      </div>
+    </div>
+  </section>
+  {{/if}}
+
+</div>

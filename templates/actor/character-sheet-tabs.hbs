@@ -1,0 +1,9 @@
+{{!-- Character Sheet: Tab navigation --}}
+<nav class="fu-tabs">
+  {{#each tabs}}
+  <button class="fu-tab-btn {{cssClass}}" type="button"
+          data-group="{{group}}" data-tab="{{id}}">
+    {{fu_localize label}}
+  </button>
+  {{/each}}
+</nav>

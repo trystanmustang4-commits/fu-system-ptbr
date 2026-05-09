@@ -1,0 +1,31 @@
+{{!-- FU Item Card — item description in chat --}}
+<div class="fu-roll-card">
+  <div class="card-header">
+    {{#if item.img}}<img src="{{item.img}}" alt="" style="width:24px;height:24px;border-radius:3px;border:none;object-fit:cover;">{{/if}}
+    <span>{{item.name}}</span>
+    <span style="margin-left:auto;font-size:11px;opacity:0.7">
+      {{fu_localize (concat "TYPES.Item." item.type)}}
+    </span>
+  </div>
+  <div class="card-body">
+    {{#if system.description}}
+    <div class="fu-item-desc" style="font-size:13px;line-height:1.5">
+      {{{system.description}}}
+    </div>
+    {{/if}}
+
+    {{#if (fu_is item.type "weapon")}}
+    <div class="fu-item-stats fu-muted" style="font-size:11px;margin-top:6px">
+      Precisão: {{system.precision.[0]}} + {{system.precision.[1]}}
+      {{#if system.precisionBonus}}+{{system.precisionBonus}}{{/if}}
+      · Dano: {{system.damage}} ({{fu_damage_label system.damageType}})
+    </div>
+    {{/if}}
+
+    {{#if (fu_is item.type "spell")}}
+    <div class="fu-item-stats fu-muted" style="font-size:11px;margin-top:6px">
+      {{system.mpCost}} PM · {{system.target}} · {{system.duration}}
+    </div>
+    {{/if}}
+  </div>
+</div>

@@ -1,0 +1,19 @@
+# Node
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.code-workspace
+
+# Foundry local data
+*.db
+*.db-journal
+
+# PDFs e arquivos de referência (não vão pro repositório)
+_pdfs-referencia/
+*.pdf
+*.zip

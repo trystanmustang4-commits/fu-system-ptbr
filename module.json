@@ -1,0 +1,29 @@
+{
+  "id": "fabula-ultima-chargen",
+  "title": "Fabula Ultima - Criador de Personagens",
+  "description": "Assistente passo a passo para criar personagens do sistema Fabula Ultima (edição brasileira). Suporta todas as 15 classes do Livro Básico.",
+  "version": "1.0.0",
+  "compatibility": {
+    "minimum": "11",
+    "verified": "12"
+  },
+  "authors": [
+    {
+      "name": "",
+      "email": ""
+    }
+  ],
+  "esmodules": ["scripts/main.js"],
+  "styles": ["styles/fabula-ultima.css"],
+  "languages": [
+    {
+      "lang": "pt-BR",
+      "name": "Português (Brasil)",
+      "path": "lang/pt-BR.json"
+    }
+  ],
+  "url": "",
+  "manifest": "",
+  "download": "",
+  "flags": {}
+}

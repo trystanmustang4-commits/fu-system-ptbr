@@ -1,0 +1,51 @@
+/* ── Condition panel components ──────────────────────────────────────────────── */
+
+.fu-conditions-panel {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 6px 0;
+}
+
+.fu-cond-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+  user-select: none;
+  opacity: 0.4;
+  transition: opacity 0.2s, filter 0.2s;
+}
+
+.fu-cond-toggle:hover { opacity: 0.75; }
+
+.fu-cond-toggle.active {
+  opacity: 1;
+  filter: drop-shadow(0 0 4px var(--fu-color-condition-active, #c04040));
+}
+
+.fu-cond-toggle img {
+  width: 28px;
+  height: 28px;
+  border: none;
+  object-fit: contain;
+  filter: grayscale(0.4);
+}
+
+.fu-cond-toggle.active img {
+  filter: none;
+}
+
+.fu-cond-toggle .cond-label {
+  font-size: 9px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fu-color-text-muted, #8a7060);
+}
+
+.fu-cond-toggle.active .cond-label {
+  color: var(--fu-color-condition-active, #c04040);
+  font-weight: bold;
+}

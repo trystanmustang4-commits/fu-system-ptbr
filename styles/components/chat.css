@@ -1,0 +1,77 @@
+/* ── Chat message components ─────────────────────────────────────────────────── */
+
+.fu-theme-livro .fu-roll-card,
+.fu-theme-jrpg  .fu-roll-card {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.fu-roll-card .card-header {
+  padding: 8px 12px;
+  background: var(--fu-color-accent, #c8a96e);
+  color: var(--fu-color-text-on-accent, #1a0e05);
+  font-family: var(--fu-font-title, "Cinzel", serif);
+  font-size: 13px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fu-roll-card .card-body {
+  padding: 10px 12px;
+  background: var(--fu-bg-card, rgba(245,240,232,0.95));
+}
+
+.fu-roll-card .roll-total {
+  text-align: center;
+  font-size: 32px;
+  font-family: var(--fu-font-title, "Cinzel", serif);
+  font-weight: bold;
+  padding: 4px 0;
+}
+
+.fu-roll-card .result-badge {
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 3px 0 6px;
+}
+
+.fu-roll-card .result-badge.critical { color: var(--fu-color-critical, #c8a000); }
+.fu-roll-card .result-badge.fumble   { color: var(--fu-color-fumble,   #c0392b); }
+.fu-roll-card .result-badge.success  { color: #27ae60; }
+.fu-roll-card .result-badge.failure  { color: var(--fu-color-fumble,   #c0392b); }
+
+.fu-roll-card .card-footer {
+  padding: 6px 12px;
+  background: var(--fu-bg-tab, rgba(0,0,0,0.08));
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+/* Opportunity and damage notification */
+.fu-opportunity,
+.fu-crisis,
+.fu-damage-msg,
+.fu-condition-msg {
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  margin: 2px 0;
+}
+
+.fu-crisis         { background: rgba(200,  0, 0, 0.1); color: #c00; }
+.fu-damage-msg     { background: rgba(200, 50, 0, 0.1); }
+.fu-condition-msg  { background: rgba(100, 0, 200, 0.08); }
+.fu-opportunity    { background: rgba(200,160, 0, 0.1); }
+
+.fu-condition-msg .condition-icon {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  border: none;
+}

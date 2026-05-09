@@ -1,0 +1,33 @@
+/* ── Resource bar components ─────────────────────────────────────────────────── */
+
+.fu-resource-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0;
+}
+
+.fu-resource-row .res-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fu-color-text-muted, #8a7060);
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.fu-resource-row .res-input {
+  width: 44px !important;
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.fu-resource-row .res-sep {
+  color: var(--fu-color-text-muted, #8a7060);
+  font-size: 12px;
+}
+
+.fu-resource-row .fu-bar-track {
+  flex: 1;
+}

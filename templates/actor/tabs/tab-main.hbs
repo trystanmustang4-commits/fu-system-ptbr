@@ -1,0 +1,70 @@
+{{!-- Tab: Main (attributes + derived stats) --}}
+<div class="fu-tab-body fu-scroll" data-tab="main" data-group="primary">
+
+  {{!-- Attributes --}}
+  <section class="fu-section">
+    <div class="fu-section-header">
+      <h3>Atributos</h3>
+    </div>
+    <div class="fu-attr-grid">
+      {{#each config.ATTRIBUTES}}
+      <div class="fu-attr-cell">
+        <div class="attr-label">{{@key}}</div>
+        <div class="fu-attr-die attr-die" data-attr="{{@key}}" title="Clique para ciclar">
+          d{{lookup ../system.attributes @key}}
+        </div>
+        <div class="attr-die-label fu-muted" style="font-size:10px;text-align:center">
+          {{fu_localize this}}
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </section>
+
+  {{!-- Derived Stats --}}
+  <section class="fu-section">
+    <div class="fu-section-header">
+      <h3>Estatísticas</h3>
+    </div>
+    <div class="fu-stat-grid">
+      <div class="fu-stat-box">
+        <div class="label">Crise</div>
+        <div class="value">{{system.crisis}}</div>
+      </div>
+      <div class="fu-stat-box">
+        <div class="label">DEF</div>
+        <div class="value">{{system.def}}</div>
+      </div>
+      <div class="fu-stat-box">
+        <div class="label">DEF.M</div>
+        <div class="value">{{system.mdef}}</div>
+      </div>
+      <div class="fu-stat-box">
+        <div class="label">Iniciativa</div>
+        <div class="value">{{fu_format_sign system.initiative}}</div>
+      </div>
+    </div>
+  </section>
+
+  {{!-- Quick rolls --}}
+  <section class="fu-section">
+    <div class="fu-section-header">
+      <h3>Testes Rápidos</h3>
+    </div>
+    <div class="fu-roll-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+      <button class="fu-btn" type="button" data-action="rollAttr"
+              data-attr1="des" data-attr2="vig" data-flavor="DES + VIG">DES + VIG</button>
+      <button class="fu-btn" type="button" data-action="rollAttr"
+              data-attr1="des" data-attr2="ast" data-flavor="DES + AST">DES + AST</button>
+      <button class="fu-btn" type="button" data-action="rollAttr"
+              data-attr1="vig" data-attr2="vig" data-flavor="VIG + VIG">VIG + VIG</button>
+      <button class="fu-btn" type="button" data-action="rollAttr"
+              data-attr1="ast" data-attr2="ast" data-flavor="AST + AST">AST + AST</button>
+      <button class="fu-btn" type="button" data-action="rollAttr"
+              data-attr1="ast" data-attr2="von" data-flavor="AST + VON">AST + VON</button>
+      <button class="fu-btn" type="button" data-action="rollAttr"
+              data-attr1="von" data-attr2="von" data-flavor="VON + VON">VON + VON</button>
+    </div>
+  </section>
+
+</div>

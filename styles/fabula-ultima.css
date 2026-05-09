@@ -1,0 +1,567 @@
+/* ════════════════════════════════════════════════════════════════
+   Fabula Ultima – Criador de Personagens
+   Tema: JRPG brasileiro, cores quentes e legíveis
+════════════════════════════════════════════════════════════════ */
+
+:root {
+  --fu-primary:     #c0392b;
+  --fu-primary-dk:  #962d22;
+  --fu-accent:      #e67e22;
+  --fu-gold:        #f1c40f;
+  --fu-light:       #fdf6ec;
+  --fu-border:      #d4b483;
+  --fu-bg:          #1a0f05;
+  --fu-card:        #2a1a0e;
+  --fu-card-hover:  #3a2518;
+  --fu-text:        #f0e6d3;
+  --fu-text-muted:  #a89070;
+  --fu-green:       #27ae60;
+  --fu-blue:        #2980b9;
+  --fu-purple:      #8e44ad;
+  --fu-red:         #c0392b;
+  --fu-radius:      6px;
+  --fu-shadow:      0 2px 8px rgba(0,0,0,.5);
+}
+
+/* ── Window shell ─────────────────────────────────────────────── */
+.fu-chargen.app {
+  background: var(--fu-bg);
+  color:      var(--fu-text);
+  font-family: "Palatino Linotype", Palatino, serif;
+}
+
+.fu-chargen .window-header {
+  background: linear-gradient(135deg, var(--fu-primary-dk), #5d1a0a);
+  border-bottom: 2px solid var(--fu-gold);
+}
+
+.fu-chargen .window-title { color: var(--fu-gold); letter-spacing: .05em; }
+
+/* ── Sidebar button ───────────────────────────────────────────── */
+button.fu-open-creator {
+  background: linear-gradient(135deg, var(--fu-primary), var(--fu-accent));
+  color: #fff;
+  border: none;
+  border-radius: var(--fu-radius);
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 4px;
+}
+button.fu-open-creator:hover { filter: brightness(1.15); }
+
+/* ── Wizard container ─────────────────────────────────────────── */
+.fu-wizard {
+  display:        flex;
+  flex-direction: column;
+  height:         100%;
+  overflow:       hidden;
+}
+
+/* ── Step tabs ────────────────────────────────────────────────── */
+.fu-steps {
+  display:          flex;
+  background:       var(--fu-card);
+  border-bottom:    2px solid var(--fu-border);
+  padding:          0;
+  gap:              0;
+  overflow-x:       auto;
+  flex-shrink:      0;
+}
+
+.fu-step-tab {
+  flex:             1;
+  min-width:        80px;
+  background:       transparent;
+  border:           none;
+  border-bottom:    3px solid transparent;
+  color:            var(--fu-text-muted);
+  padding:          8px 6px 6px;
+  cursor:           pointer;
+  font-size:        11px;
+  display:          flex;
+  flex-direction:   column;
+  align-items:      center;
+  gap:              2px;
+  transition:       all .15s;
+}
+.fu-step-tab:hover       { background: var(--fu-card-hover); color: var(--fu-text); }
+.fu-step-tab.active      { border-bottom-color: var(--fu-gold); color: var(--fu-gold); background: var(--fu-card-hover); }
+.fu-step-num             { font-size: 16px; font-weight: bold; }
+.fu-step-label           { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
+
+/* ── Stat bar ─────────────────────────────────────────────────── */
+.fu-statbar {
+  display:       flex;
+  flex-wrap:     wrap;
+  gap:           12px;
+  padding:       6px 14px;
+  background:    #0d0802;
+  border-bottom: 1px solid var(--fu-border);
+  font-size:     12px;
+  flex-shrink:   0;
+}
+.fu-statbar span         { white-space: nowrap; }
+.fu-statbar strong       { color: var(--fu-gold); }
+
+.fu-budget-track {
+  display:        inline-block;
+  width:          60px;
+  height:         6px;
+  background:     #333;
+  border-radius:  3px;
+  vertical-align: middle;
+  overflow:       hidden;
+}
+.fu-budget-bar {
+  display:        block;
+  height:         100%;
+  background:     linear-gradient(90deg, var(--fu-green), var(--fu-gold));
+  transition:     width .3s;
+}
+
+/* ── Step content area ────────────────────────────────────────── */
+.fu-step-content {
+  flex:       1;
+  overflow-y: auto;
+  padding:    16px 20px;
+}
+
+.fu-section h2 {
+  color:         var(--fu-gold);
+  border-bottom: 1px solid var(--fu-border);
+  padding-bottom: 6px;
+  margin-bottom: 14px;
+  font-size:     18px;
+}
+
+.fu-instructions {
+  background: rgba(255,255,255,.05);
+  border-left: 3px solid var(--fu-accent);
+  padding:     8px 12px;
+  margin-bottom: 14px;
+  border-radius: 0 var(--fu-radius) var(--fu-radius) 0;
+  font-size:   13px;
+}
+
+/* ── Form fields ──────────────────────────────────────────────── */
+.fu-form-grid {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   12px;
+}
+.fu-field-group       { display: flex; flex-direction: column; gap: 4px; }
+.fu-field-group.full  { grid-column: 1 / -1; }
+.fu-field-group label { font-size: 12px; color: var(--fu-text-muted); text-transform: uppercase; letter-spacing: .04em; }
+.fu-field-group small { font-size: 10px; color: var(--fu-text-muted); }
+
+.fu-field {
+  background:  var(--fu-card);
+  border:      1px solid var(--fu-border);
+  border-radius: var(--fu-radius);
+  color:       var(--fu-text);
+  padding:     6px 10px;
+  font-size:   13px;
+  font-family: inherit;
+  width:       100%;
+  box-sizing:  border-box;
+}
+.fu-field:focus {
+  border-color: var(--fu-gold);
+  outline:      none;
+  box-shadow:   0 0 0 2px rgba(241,196,15,.2);
+}
+textarea.fu-field { resize: vertical; }
+
+.fu-hint {
+  font-size:  11px;
+  color:      var(--fu-text-muted);
+  font-style: italic;
+  margin-top: 2px;
+}
+.fu-hint.theme-desc { color: var(--fu-accent); font-style: normal; }
+
+/* ── Classes step ────────────────────────────────────────────── */
+.fu-selected-classes { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+
+.fu-class-card.selected {
+  background:    var(--fu-card);
+  border:        1px solid var(--fu-border);
+  border-radius: var(--fu-radius);
+  overflow:      hidden;
+}
+.fu-class-card-header {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  background:      rgba(192,57,43,.3);
+  padding:         8px 12px;
+  border-bottom:   1px solid var(--fu-border);
+}
+.fu-class-card-header strong { color: var(--fu-gold); font-size: 15px; }
+.fu-remove-class {
+  background: transparent; border: none; color: var(--fu-text-muted);
+  cursor: pointer; font-size: 16px; padding: 0 4px;
+}
+.fu-remove-class:hover { color: var(--fu-red); }
+
+.fu-class-card-body  { padding: 10px 12px; }
+.fu-level-control    { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 13px; }
+.fu-class-levels     { width: 60px; text-align: center; }
+
+.fu-benefits-row     { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.fu-badge {
+  display:       inline-block;
+  padding:       2px 8px;
+  border-radius: 20px;
+  font-size:     11px;
+  background:    rgba(255,255,255,.1);
+  border:        1px solid var(--fu-border);
+}
+.fu-badge.pv   { background: rgba(192,57,43,.4);  border-color: var(--fu-red); }
+.fu-badge.pm   { background: rgba(41,128,185,.4);  border-color: var(--fu-blue); }
+.fu-badge.pi   { background: rgba(39,174,96,.4);   border-color: var(--fu-green); }
+.fu-badge.equip{ background: rgba(142,68,173,.4);  border-color: var(--fu-purple); }
+
+.fu-powers-grid { display: flex; flex-direction: column; gap: 4px; }
+
+.fu-power-option {
+  display:       flex;
+  align-items:   flex-start;
+  gap:           8px;
+  padding:       6px 8px;
+  border-radius: var(--fu-radius);
+  cursor:        pointer;
+  font-size:     12px;
+  transition:    background .1s;
+}
+.fu-power-option:hover   { background: rgba(255,255,255,.05); }
+.fu-power-option.selected{ background: rgba(241,196,15,.1); border: 1px solid var(--fu-gold); }
+.fu-power-name           { font-weight: bold; color: var(--fu-text); min-width: 160px; }
+.fu-power-name em        { color: var(--fu-text-muted); font-size: 10px; }
+.fu-power-desc           { color: var(--fu-text-muted); font-size: 11px; line-height: 1.4; }
+.fu-power-option input   { margin-top: 2px; accent-color: var(--fu-gold); }
+
+.fu-class-picker {
+  border:        1px solid var(--fu-border);
+  border-radius: var(--fu-radius);
+  padding:       8px;
+  background:    var(--fu-card);
+}
+.fu-class-picker summary { cursor: pointer; color: var(--fu-accent); font-size: 13px; padding: 4px; }
+.fu-class-list {
+  display:               grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap:                   8px;
+  margin-top:            10px;
+}
+.fu-class-tile {
+  background:    var(--fu-card-hover);
+  border:        1px solid var(--fu-border);
+  border-radius: var(--fu-radius);
+  padding:       10px;
+  cursor:        pointer;
+  text-align:    left;
+  color:         var(--fu-text);
+  display:       flex;
+  flex-direction: column;
+  gap:           4px;
+  transition:    all .15s;
+}
+.fu-class-tile:hover { border-color: var(--fu-gold); background: rgba(192,57,43,.2); }
+.fu-class-tile strong { color: var(--fu-gold); font-size: 13px; }
+.fu-class-tile small  { color: var(--fu-text-muted); font-size: 10px; line-height: 1.3; }
+
+/* ── Attributes step ─────────────────────────────────────────── */
+.fu-profiles {
+  display:               grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:                   10px;
+  margin-bottom:         20px;
+}
+.fu-profile-btn {
+  background:    var(--fu-card);
+  border:        2px solid var(--fu-border);
+  border-radius: var(--fu-radius);
+  padding:       10px;
+  cursor:        pointer;
+  text-align:    center;
+  color:         var(--fu-text);
+  display:       flex;
+  flex-direction: column;
+  gap:           4px;
+  transition:    all .15s;
+}
+.fu-profile-btn:hover  { border-color: var(--fu-accent); }
+.fu-profile-btn.active { border-color: var(--fu-gold); background: rgba(241,196,15,.1); }
+.fu-profile-btn strong { color: var(--fu-gold); font-size: 14px; }
+.fu-profile-dice       { color: var(--fu-accent); font-size: 13px; }
+.fu-profile-btn small  { color: var(--fu-text-muted); font-size: 11px; }
+
+.fu-attr-grid { display: flex; flex-direction: column; gap: 10px; }
+.fu-attr-row  {
+  display:       flex;
+  align-items:   center;
+  gap:           12px;
+  padding:       10px 12px;
+  background:    var(--fu-card);
+  border:        1px solid var(--fu-border);
+  border-radius: var(--fu-radius);
+}
+.fu-attr-label {
+  flex:         1;
+  display:      flex;
+  align-items:  center;
+  gap:          10px;
+}
+.fu-attr-icon { font-size: 20px; }
+.fu-attr-label span   { display: flex; flex-direction: column; }
+.fu-attr-label em     { color: var(--fu-text-muted); font-size: 11px; }
+.fu-attr-label small  { color: var(--fu-text-muted); font-size: 10px; }
+.fu-attr-label.des    { border-left: 3px solid #27ae60; padding-left: 8px; }
+.fu-attr-label.vig    { border-left: 3px solid #c0392b; padding-left: 8px; }
+.fu-attr-label.ast    { border-left: 3px solid #2980b9; padding-left: 8px; }
+.fu-attr-label.von    { border-left: 3px solid #8e44ad; padding-left: 8px; }
+.fu-attr-die {
+  width:         80px;
+  background:    var(--fu-card-hover);
+  border:        2px solid var(--fu-gold);
+  border-radius: var(--fu-radius);
+  color:         var(--fu-gold);
+  font-size:     18px;
+  font-weight:   bold;
+  padding:       6px;
+  text-align:    center;
+}
+
+.fu-attr-hint {
+  margin-top: 12px;
+  font-size:  11px;
+  color:      var(--fu-text-muted);
+  text-align: center;
+}
+
+/* ── Equipment step ──────────────────────────────────────────── */
+.fu-equipment-columns {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 16px;
+}
+
+.fu-equip-section { margin-bottom: 16px; }
+.fu-equip-section h3 {
+  font-size: 14px;
+  color: var(--fu-gold);
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--fu-border);
+  padding-bottom: 4px;
+}
+
+.fu-equip-item {
+  display:       flex;
+  align-items:   center;
+  gap:           8px;
+  padding:       6px 8px;
+  border-radius: var(--fu-radius);
+  font-size:     12px;
+  cursor:        pointer;
+  border:        1px solid transparent;
+  transition:    all .1s;
+  margin-bottom: 4px;
+}
+.fu-equip-item:hover   { background: rgba(255,255,255,.05); }
+.fu-equip-item.selected { background: rgba(241,196,15,.1); border-color: var(--fu-gold); }
+.fu-equip-item.martial  { border-left: 3px solid var(--fu-purple); }
+.fu-equip-name  { font-weight: bold; min-width: 140px; }
+.fu-equip-stats { color: var(--fu-text-muted); font-size: 10px; flex: 1; }
+.fu-equip-cost  { color: var(--fu-gold); white-space: nowrap; }
+.fu-martial-tag {
+  display:       inline-block;
+  padding:       1px 5px;
+  background:    rgba(142,68,173,.5);
+  border-radius: 3px;
+  font-size:     9px;
+  color:         #cc99ff;
+  margin-left:   4px;
+  vertical-align: middle;
+}
+
+.fu-equip-right  { display: flex; flex-direction: column; gap: 12px; }
+.fu-armor-select,
+.fu-shield-select {
+  width:   100%;
+  padding: 6px;
+}
+.fu-equip-legend { font-size: 11px; color: var(--fu-text-muted); }
+
+/* ── Bonds step ──────────────────────────────────────────────── */
+.fu-bonds-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
+
+.fu-bond-card {
+  background:    var(--fu-card);
+  border:        1px solid var(--fu-border);
+  border-radius: var(--fu-radius);
+  overflow:      hidden;
+}
+.fu-bond-header {
+  display:         flex;
+  align-items:     center;
+  gap:             8px;
+  padding:         8px 12px;
+  background:      rgba(255,255,255,.05);
+  border-bottom:   1px solid var(--fu-border);
+}
+.fu-bond-target { flex: 1; }
+.fu-bond-strength-display { font-size: 12px; color: var(--fu-text-muted); white-space: nowrap; }
+.fu-bond-strength-display strong { color: var(--fu-gold); }
+.fu-remove-bond { background: transparent; border: none; color: var(--fu-text-muted); cursor: pointer; font-size: 16px; }
+.fu-remove-bond:hover { color: var(--fu-red); }
+
+.fu-bond-emotions {
+  display: flex;
+  gap:     0;
+  padding: 8px 12px;
+}
+.fu-emotion-pair {
+  flex:          1;
+  display:       flex;
+  flex-direction: column;
+  gap:           4px;
+  padding:       0 8px;
+  border-right:  1px solid var(--fu-border);
+}
+.fu-emotion-pair:last-child { border-right: none; }
+.fu-emotion-option {
+  display:    flex;
+  align-items: center;
+  gap:         6px;
+  font-size:   12px;
+  cursor:      pointer;
+}
+.fu-emotion-option input { accent-color: var(--fu-gold); }
+
+.fu-bond-rules {
+  background:    rgba(255,255,255,.03);
+  border:        1px solid var(--fu-border);
+  border-radius: var(--fu-radius);
+  padding:       10px 14px;
+  margin-top:    8px;
+}
+.fu-bond-rules h4    { color: var(--fu-gold); margin-bottom: 6px; font-size: 13px; }
+.fu-bond-rules ul    { padding-left: 18px; font-size: 12px; color: var(--fu-text-muted); }
+.fu-bond-rules ul li { margin-bottom: 4px; }
+
+/* ── Review step ─────────────────────────────────────────────── */
+.fu-review-columns {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   16px;
+}
+.fu-review-block {
+  background:    var(--fu-card);
+  border:        1px solid var(--fu-border);
+  border-radius: var(--fu-radius);
+  padding:       12px;
+  margin-bottom: 12px;
+}
+.fu-review-block h3 { color: var(--fu-gold); margin-bottom: 6px; font-size: 16px; }
+.fu-review-block h4 { color: var(--fu-accent); margin-bottom: 8px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,.1); padding-bottom: 4px; }
+.fu-review-block p  { font-size: 13px; margin-bottom: 4px; }
+
+.fu-attr-summary {
+  display: flex;
+  gap:     12px;
+  flex-wrap: wrap;
+}
+.fu-attr-summary span {
+  padding:       4px 12px;
+  border-radius: 20px;
+  font-size:     14px;
+  font-weight:   bold;
+  background:    rgba(255,255,255,.08);
+  border:        1px solid var(--fu-border);
+}
+.fu-attr-summary .des { border-color: #27ae60; color: #2ecc71; }
+.fu-attr-summary .vig { border-color: #c0392b; color: #e74c3c; }
+.fu-attr-summary .ast { border-color: #2980b9; color: #3498db; }
+.fu-attr-summary .von { border-color: #8e44ad; color: #9b59b6; }
+
+.fu-stat-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.fu-stat-table td { padding: 4px 6px; }
+.fu-stat-table td:first-child { color: var(--fu-text-muted); }
+.fu-stat-table td:last-child  { text-align: right; }
+.fu-stat-table strong         { color: var(--fu-gold); }
+
+.fu-review-class  { margin-bottom: 10px; }
+.fu-review-class strong { color: var(--fu-gold); }
+.fu-review-class ul     { padding-left: 16px; font-size: 12px; margin-top: 4px; }
+.fu-review-class ul li  { color: var(--fu-text-muted); margin-bottom: 2px; }
+.fu-review-class ul li em { color: var(--fu-text); }
+
+.fu-warning {
+  background:    rgba(192,57,43,.2);
+  border:        1px solid var(--fu-red);
+  border-radius: var(--fu-radius);
+  padding:       10px 14px;
+  font-size:     13px;
+  color:         #ff9999;
+  margin-top:    12px;
+}
+
+/* ── Footer buttons ──────────────────────────────────────────── */
+.fu-footer {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  padding:         10px 20px;
+  background:      var(--fu-card);
+  border-top:      2px solid var(--fu-border);
+  flex-shrink:     0;
+}
+
+.fu-btn-primary, .fu-btn-secondary {
+  border:        none;
+  border-radius: var(--fu-radius);
+  padding:       8px 20px;
+  font-size:     14px;
+  font-family:   inherit;
+  cursor:        pointer;
+  letter-spacing: .03em;
+  transition:    all .15s;
+}
+.fu-btn-primary {
+  background: linear-gradient(135deg, var(--fu-primary), var(--fu-accent));
+  color:      #fff;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(192,57,43,.4);
+}
+.fu-btn-primary:hover:not(:disabled) { filter: brightness(1.15); transform: translateY(-1px); }
+.fu-btn-primary:disabled,
+.fu-btn-primary.disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+.fu-btn-secondary {
+  background: rgba(255,255,255,.08);
+  color:      var(--fu-text);
+  border:     1px solid var(--fu-border);
+}
+.fu-btn-secondary:hover { background: rgba(255,255,255,.14); }
+
+/* ── Select elements (global override for wizard) ────────────── */
+.fu-wizard select {
+  background:    var(--fu-card);
+  border:        1px solid var(--fu-border);
+  border-radius: var(--fu-radius);
+  color:         var(--fu-text);
+  padding:       6px 10px;
+  font-family:   inherit;
+  font-size:     13px;
+}
+.fu-wizard select:focus {
+  border-color: var(--fu-gold);
+  outline:      none;
+}
+
+/* ── Scrollbars ───────────────────────────────────────────────── */
+.fu-wizard *::-webkit-scrollbar       { width: 6px; height: 6px; }
+.fu-wizard *::-webkit-scrollbar-track { background: rgba(255,255,255,.05); }
+.fu-wizard *::-webkit-scrollbar-thumb { background: var(--fu-border); border-radius: 3px; }
