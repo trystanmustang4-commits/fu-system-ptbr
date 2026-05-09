@@ -150,20 +150,52 @@ export class CharacterCreator extends Application {
       })),
     } : null;
 
+    // Dice pool per attribute: only show dice still available from the profile
+    const attrProfile = FU_ATTR_PROFILES.find(p => p.id === c.attrProfile);
+    const poolDice    = attrProfile ? [...attrProfile.dice] : [8, 8, 8, 8];
+    const attrKeys    = ['des', 'vig', 'ast', 'von'];
+    const makeDiceOptions = (key) => {
+      const pool = [...poolDice];
+      attrKeys.filter(k => k !== key).forEach(k => {
+        const idx = pool.indexOf(c.attributes[k]);
+        if (idx !== -1) pool.splice(idx, 1);
+      });
+      const available = new Set(pool);
+      available.add(c.attributes[key]); // always include own current value
+      return [6, 8, 10, 12]
+        .filter(d => available.has(d))
+        .map(d => ({ value: d, label: `d${d}`, selected: c.attributes[key] === d }));
+    };
+
+    // Equipment: mark weapons that can't be afforded
+    const budget        = stats.budget;
+    const weaponOptions = FU_WEAPONS.map(w => ({
+      ...w,
+      canAfford: w.cost <= budget || c.equipment.weapons.includes(w.id),
+    }));
+
+    // Theme name lookup for review
+    const selectedTheme = FU_THEMES.find(t => t.id === c.theme);
+
     return {
       step:     this._step,
       steps:    CharacterCreator.STEPS,
       char:     { ...c, bonds: bondsForTemplate },
       stats,
       startingLevel,
-      startingBudget: STARTING_BUDGET,
-      themes:         FU_THEMES,
-      profiles:       FU_ATTR_PROFILES,
-      bondEmotions:   bondEmotionsForTemplate,
-      allClasses:     FU_CLASSES,
-      allWeapons:     FU_WEAPONS,
-      allArmors:      FU_ARMORS,
-      allShields:     FU_SHIELDS,
+      startingBudget:  STARTING_BUDGET,
+      themes:          FU_THEMES,
+      selectedTheme,
+      profiles:        FU_ATTR_PROFILES,
+      desDice:         makeDiceOptions('des'),
+      vigDice:         makeDiceOptions('vig'),
+      astDice:         makeDiceOptions('ast'),
+      vonDice:         makeDiceOptions('von'),
+      bondEmotions:    bondEmotionsForTemplate,
+      allClasses:      FU_CLASSES,
+      weaponOptions,
+      allArmors:       FU_ARMORS,
+      allShields:      FU_SHIELDS,
       selectedClasses,
       activeClass,
       activeClassIdx,

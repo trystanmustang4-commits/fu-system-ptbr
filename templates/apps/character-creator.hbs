@@ -236,10 +236,7 @@
             <small>DEF, precisão</small>
           </div>
           <select class="fu-attr-die" data-attr="des">
-            <option value="6"  {{#if (fu_is char.attributes.des  6)}}selected{{/if}}>d6</option>
-            <option value="8"  {{#if (fu_is char.attributes.des  8)}}selected{{/if}}>d8</option>
-            <option value="10" {{#if (fu_is char.attributes.des 10)}}selected{{/if}}>d10</option>
-            <option value="12" {{#if (fu_is char.attributes.des 12)}}selected{{/if}}>d12</option>
+            {{#each desDice}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
           </select>
         </div>
         <div class="fu-attr-row">
@@ -249,10 +246,7 @@
             <small>PV máx</small>
           </div>
           <select class="fu-attr-die" data-attr="vig">
-            <option value="6"  {{#if (fu_is char.attributes.vig  6)}}selected{{/if}}>d6</option>
-            <option value="8"  {{#if (fu_is char.attributes.vig  8)}}selected{{/if}}>d8</option>
-            <option value="10" {{#if (fu_is char.attributes.vig 10)}}selected{{/if}}>d10</option>
-            <option value="12" {{#if (fu_is char.attributes.vig 12)}}selected{{/if}}>d12</option>
+            {{#each vigDice}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
           </select>
         </div>
         <div class="fu-attr-row">
@@ -262,10 +256,7 @@
             <small>DEF.M, magia</small>
           </div>
           <select class="fu-attr-die" data-attr="ast">
-            <option value="6"  {{#if (fu_is char.attributes.ast  6)}}selected{{/if}}>d6</option>
-            <option value="8"  {{#if (fu_is char.attributes.ast  8)}}selected{{/if}}>d8</option>
-            <option value="10" {{#if (fu_is char.attributes.ast 10)}}selected{{/if}}>d10</option>
-            <option value="12" {{#if (fu_is char.attributes.ast 12)}}selected{{/if}}>d12</option>
+            {{#each astDice}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
           </select>
         </div>
         <div class="fu-attr-row">
@@ -275,10 +266,7 @@
             <small>PM máx</small>
           </div>
           <select class="fu-attr-die" data-attr="von">
-            <option value="6"  {{#if (fu_is char.attributes.von  6)}}selected{{/if}}>d6</option>
-            <option value="8"  {{#if (fu_is char.attributes.von  8)}}selected{{/if}}>d8</option>
-            <option value="10" {{#if (fu_is char.attributes.von 10)}}selected{{/if}}>d10</option>
-            <option value="12" {{#if (fu_is char.attributes.von 12)}}selected{{/if}}>d12</option>
+            {{#each vonDice}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
           </select>
         </div>
       </div>
@@ -301,10 +289,11 @@
       <div class="fu-equipment-columns">
         <div class="fu-equip-section">
           <h3>⚔️ Armas</h3>
-          {{#each allWeapons}}
-          <label class="fu-equip-item {{#if (fu_includes ../char.equipment.weapons id)}}selected{{/if}}">
+          {{#each weaponOptions}}
+          <label class="fu-equip-item {{#if (fu_includes ../char.equipment.weapons id)}}selected{{/if}} {{#unless canAfford}}fu-unavailable{{/unless}}">
             <input type="checkbox" class="fu-weapon-checkbox" data-weapon-id="{{id}}"
-              {{#if (fu_includes ../char.equipment.weapons id)}}checked{{/if}}>
+              {{#if (fu_includes ../char.equipment.weapons id)}}checked{{/if}}
+              {{#unless canAfford}}disabled{{/unless}}>
             <div class="fu-equip-info">
               <span class="fu-equip-name">{{name}} {{#if martial}}<span class="fu-martial-tag">M</span>{{/if}}</span>
               <span class="fu-equip-stats">{{precision.[0]}}+{{precision.[1]}} · RA+{{damage}} {{damageType}} · {{range}}</span>
@@ -409,7 +398,7 @@
             <h3>{{char.name}}</h3>
             <p><em>{{char.identity}}</em></p>
             {{#if char.pronouns}}<p>Pronomes: {{char.pronouns}}</p>{{/if}}
-            {{#if char.theme}}<p>Tema: {{char.theme}}</p>{{/if}}
+            {{#if selectedTheme}}<p>Tema: {{selectedTheme.name}}</p>{{/if}}
             {{#if char.origin}}<p>Origem: {{char.origin}}</p>{{/if}}
           </div>
 

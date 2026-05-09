@@ -691,6 +691,16 @@
   accent-color: #c9a76f;
 }
 
+.fu-chargen .fu-equip-item.fu-unavailable {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.fu-chargen .fu-equip-item.fu-unavailable:hover {
+  background: transparent;
+  border-color: transparent;
+}
+
 .fu-chargen .fu-equip-name {
   flex: 1;
   color: #ffeec0;
@@ -725,6 +735,8 @@
 
 .fu-chargen .fu-equip-section select {
   margin-top: 4px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .fu-chargen .fu-equip-right {
@@ -1080,11 +1092,15 @@
 }
 
 .fu-chargen .fu-bond-target {
-  width: auto !important;   /* override global 100% */
+  width: 100% !important;
   font-size: 14px !important;
   font-weight: 700;
   font-family: "Exo 2", sans-serif;
   letter-spacing: 0.02em;
+}
+
+.fu-chargen .fu-bond-label {
+  white-space: nowrap;
 }
 
 .fu-chargen .fu-bond-meta {
