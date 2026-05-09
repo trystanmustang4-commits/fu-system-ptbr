@@ -337,6 +337,38 @@
   color: #ffeec0;
 }
 
+/* ── Class tab strip ──────────────────────────────────────────────────────── */
+.fu-chargen .fu-class-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.fu-chargen .fu-class-tab-btn {
+  padding: 5px 14px;
+  border: 1px solid #5a3f10;
+  border-radius: 4px 4px 0 0;
+  background: rgba(0,0,0,0.2);
+  color: #a89060;
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.fu-chargen .fu-class-tab-btn:hover {
+  background: rgba(201,167,111,0.1);
+  color: #ffeec0;
+}
+
+.fu-chargen .fu-class-tab-btn.active {
+  background: rgba(201,167,111,0.15);
+  border-color: #c9a76f;
+  color: #ffeec0;
+  font-weight: 700;
+}
+
 /* ── Class cards ───────────────────────────────────────────────────────────── */
 .fu-chargen .fu-class-card {
   border: 1px solid #5a3f10;

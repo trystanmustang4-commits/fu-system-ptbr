@@ -12,9 +12,10 @@ export class CharacterCreator extends Application {
 
   constructor({ actor } = {}) {
     super();
-    this._step  = 0;
-    this._char  = CharacterCreator._blankCharacter();
-    this._actor = actor ?? null;
+    this._step           = 0;
+    this._activeClassIdx = 0;
+    this._char           = CharacterCreator._blankCharacter();
+    this._actor          = actor ?? null;
   }
 
   static get defaultOptions() {
@@ -137,6 +138,11 @@ export class CharacterCreator extends Application {
     const levelsLeft       = startingLevel - totalClassLevels;
     const canAddClass      = selectedClasses.length < 3 && levelsLeft > 0;
 
+    // Clamp active class index in case classes were removed
+    const activeClassIdx = Math.min(this._activeClassIdx, Math.max(0, selectedClasses.length - 1));
+    this._activeClassIdx = activeClassIdx;
+    const activeClass    = selectedClasses[activeClassIdx] ?? null;
+
     return {
       step:     this._step,
       steps:    CharacterCreator.STEPS,
@@ -152,6 +158,8 @@ export class CharacterCreator extends Application {
       allArmors:      FU_ARMORS,
       allShields:     FU_SHIELDS,
       selectedClasses,
+      activeClass,
+      activeClassIdx,
       totalClassLevels,
       levelsLeft,
       canAddClass,
@@ -230,6 +238,11 @@ export class CharacterCreator extends Application {
       this.render();
     });
 
+    html.find('.fu-class-tab-btn').on('click', (e) => {
+      const idx = parseInt(e.currentTarget.dataset.classIdx);
+      if (!isNaN(idx)) { this._activeClassIdx = idx; this.render(); }
+    });
+
     html.find('.fu-add-class').on('click', (e) => {
       const id = e.currentTarget.dataset.classId;
       if (!id || this._char.classes.find(c => c.id === id)) return;
@@ -238,12 +251,14 @@ export class CharacterCreator extends Application {
       const lvl  = this._char.level ?? 5;
       if (used >= lvl) return ui.notifications.warn(`Todos os ${lvl} níveis já foram distribuídos.`);
       this._char.classes.push({ id, levels: 1, powers: [] });
+      this._activeClassIdx = this._char.classes.length - 1;
       this.render();
     });
 
     html.find('.fu-remove-class').on('click', (e) => {
       const id = e.currentTarget.dataset.classId;
       this._char.classes = this._char.classes.filter(c => c.id !== id);
+      this._activeClassIdx = 0;
       this.render();
     });
 

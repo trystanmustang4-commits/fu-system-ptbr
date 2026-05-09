@@ -117,35 +117,46 @@
         {{#if (fu_gt levelsLeft 0)}}<span class="fu-levels-left">(faltam {{levelsLeft}})</span>{{/if}}
       </p>
 
-      {{!-- Classes selecionadas --}}
-      {{#each selectedClasses}}
+      {{!-- Abas das classes selecionadas --}}
+      {{#if selectedClasses}}
+      <div class="fu-class-tabs">
+        {{#each selectedClasses}}
+        <button type="button"
+          class="fu-class-tab-btn {{#if (fu_is @index ../activeClassIdx)}}active{{/if}}"
+          data-class-idx="{{@index}}">{{name}}</button>
+        {{/each}}
+      </div>
+      {{/if}}
+
+      {{!-- Card da classe ativa (uma por vez) --}}
+      {{#if activeClass}}
       <div class="fu-class-card selected">
         <div class="fu-class-card-header">
-          <strong>{{name}}</strong>
+          <strong>{{activeClass.name}}</strong>
           <div class="fu-stepper fu-class-stepper">
-            <button type="button" class="fu-stepper-btn fu-class-dec" data-class-id="{{id}}" title="Diminuir nível">−</button>
-            <span class="fu-stepper-val">{{levels}}</span>
-            <button type="button" class="fu-stepper-btn fu-class-inc" data-class-id="{{id}}" title="Aumentar nível">+</button>
+            <button type="button" class="fu-stepper-btn fu-class-dec" data-class-id="{{activeClass.id}}" title="Diminuir nível">−</button>
+            <span class="fu-stepper-val">{{activeClass.levels}}</span>
+            <button type="button" class="fu-stepper-btn fu-class-inc" data-class-id="{{activeClass.id}}" title="Aumentar nível">+</button>
           </div>
-          <button type="button" class="fu-remove-class" data-class-id="{{id}}">✕</button>
+          <button type="button" class="fu-remove-class" data-class-id="{{activeClass.id}}">✕</button>
         </div>
         <div class="fu-class-card-body">
           <div class="fu-benefits-row">
-            {{#if initialBenefits.pv}}<span class="fu-badge pv">+{{initialBenefits.pv}} PV</span>{{/if}}
-            {{#if initialBenefits.pm}}<span class="fu-badge pm">+{{initialBenefits.pm}} PM</span>{{/if}}
-            {{#if initialBenefits.pi}}<span class="fu-badge pi">+{{initialBenefits.pi}} PI</span>{{/if}}
+            {{#if activeClass.initialBenefits.pv}}<span class="fu-badge pv">+{{activeClass.initialBenefits.pv}} PV</span>{{/if}}
+            {{#if activeClass.initialBenefits.pm}}<span class="fu-badge pm">+{{activeClass.initialBenefits.pm}} PM</span>{{/if}}
+            {{#if activeClass.initialBenefits.pi}}<span class="fu-badge pi">+{{activeClass.initialBenefits.pi}} PI</span>{{/if}}
           </div>
 
-          {{#if powers}}
+          {{#if activeClass.powers}}
           <div class="fu-powers-grid">
             <p class="fu-powers-prompt">
-              <small>Escolha <strong>{{levels}}</strong> poder(es) — selecionados: {{selectedPowerIds.length}}/{{levels}}</small>
+              <small>Escolha <strong>{{activeClass.levels}}</strong> poder(es) — selecionados: {{activeClass.selectedPowerIds.length}}/{{activeClass.levels}}</small>
             </p>
-            {{#each powers}}
+            {{#each activeClass.powers}}
             <label class="fu-power-option">
               <input type="checkbox" class="fu-power-checkbox"
-                data-class-id="{{../id}}" data-power-id="{{id}}"
-                {{#if (fu_includes ../selectedPowerIds id)}}checked{{/if}}>
+                data-class-id="{{../activeClass.id}}" data-power-id="{{id}}"
+                {{#if (fu_includes ../activeClass.selectedPowerIds id)}}checked{{/if}}>
               <span class="fu-power-name">
                 {{name}}
                 {{#if (fu_gt maxLevel 1)}}<em class="fu-power-rank"> ×{{maxLevel}}</em>{{/if}}
@@ -159,7 +170,7 @@
           {{/if}}
         </div>
       </div>
-      {{/each}}
+      {{/if}}
 
       {{!-- Picker de classes: só aparece se pode adicionar mais --}}
       {{#if canAddClass}}
