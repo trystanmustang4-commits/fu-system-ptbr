@@ -636,25 +636,6 @@
   background: rgba(0,0,0,0.15);
 }
 
-.fu-chargen .fu-attr-label {
-  font-size: 13px;
-  color: #c9a76f;
-  flex: 1;
-}
-
-.fu-chargen .fu-attr-label em {
-  font-style: normal;
-  color: #ffeec0;
-  font-weight: 700;
-}
-
-.fu-chargen .fu-attr-label small {
-  font-size: 10px;
-  color: #6a5030;
-  display: block;
-  margin-top: 1px;
-}
-
 .fu-chargen .fu-attr-die {
   width: 80px !important;
   text-align: center;
@@ -716,11 +697,6 @@
   font-size: 14px;
 }
 
-.fu-chargen .fu-equip-stats {
-  color: #7a6040;
-  font-size: 11px;
-}
-
 .fu-chargen .fu-equip-cost {
   color: #c9a76f;
   font-weight: 700;
@@ -773,27 +749,6 @@
   margin-bottom: 8px;
 }
 
-.fu-chargen .fu-bond-target {
-  flex: 1;
-  font-weight: 700;
-}
-
-.fu-chargen .fu-bond-header span {
-  font-size: 12px;
-  color: #7a6040;
-  white-space: nowrap;
-}
-
-.fu-chargen .fu-bond-strength {
-  color: #c9a76f;
-}
-
-.fu-chargen .fu-bond-emotions {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
 .fu-chargen .fu-emotion-option {
   display: flex;
   align-items: center;
@@ -828,8 +783,8 @@
 .fu-chargen .fu-bond-rules {
   font-size: 11px;
   color: #5a4020;
-  line-height: 1.5;
-  padding: 8px;
+  line-height: 1.6;
+  padding: 8px 12px;
   border: 1px solid #3a2a08;
   border-radius: 4px;
   background: rgba(0,0,0,0.15);
@@ -1012,12 +967,14 @@
   font-weight: 700;
 }
 
-/* Attribute label rework */
+/* Attribute label */
 .fu-chargen .fu-attr-label {
   display: flex;
   align-items: center;
   gap: 8px;
   flex: 1;
+  font-size: 13px;
+  color: #c9a76f;
 }
 
 .fu-chargen .fu-attr-icon { font-size: 16px; }
@@ -1107,7 +1064,7 @@
   align-items: center;
   gap: 3px;
   white-space: nowrap;
-  padding-bottom: 7px;
+  flex: 0 0 auto;
 }
 
 .fu-chargen .fu-bond-strength-label {
@@ -1146,17 +1103,6 @@
 
 .fu-chargen .fu-powers-prompt strong { color: #c9a76f; }
 
-/* Bond rules */
-.fu-chargen .fu-bond-rules {
-  font-size: 11px;
-  color: #5a4020;
-  line-height: 1.6;
-  padding: 8px 12px;
-  border: 1px solid #3a2a08;
-  border-radius: 4px;
-  background: rgba(0,0,0,0.15);
-  margin-top: 12px;
-}
 
 .fu-chargen .fu-bond-rules em { color: #a89060; font-style: normal; }
 
