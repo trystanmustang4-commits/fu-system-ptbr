@@ -1,0 +1,861 @@
+/* ── Fabula Ultima – Character Creator Wizard ────────────────────────────── */
+/* Estilos do wizard de criação de personagem. Dark + gold, Project FU style. */
+
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=Yanone+Kaffeesatz:wght@300;400;600;700&display=swap");
+
+/* ── Root layout: 2 colunas (steps sidebar | conteúdo) ──────────────────── */
+.fu-chargen .fu-wizard {
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+  min-height: 0;
+  background: #131f1f;
+  color: #ffeec0;
+  font-family: "PT Sans Narrow", "Segoe UI", sans-serif;
+  font-size: 14px;
+  overflow: hidden;
+}
+
+/* Sidebar de passos: coluna 1, todas as linhas */
+.fu-chargen .fu-steps {
+  grid-column: 1;
+  grid-row: 1 / 4;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 12px 0;
+  background: rgba(0, 0, 0, 0.3);
+  border-right: 1px solid #5a3f10;
+  overflow-y: auto;
+}
+
+/* Barra de stats: coluna 2, linha 1 */
+.fu-chargen .fu-statbar {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 6px 16px;
+  background: rgba(0, 0, 0, 0.35);
+  border-bottom: 1px solid #5a3f10;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  letter-spacing: 0.04em;
+}
+
+.fu-chargen .fu-statbar span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #a89060;
+}
+
+.fu-chargen .fu-statbar strong {
+  color: #ffeec0;
+  font-size: 15px;
+}
+
+/* Orçamento / budget bar no statbar */
+.fu-chargen .fu-budget-track {
+  display: inline-block;
+  width: 60px;
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+.fu-chargen .fu-budget-bar {
+  display: block;
+  height: 100%;
+  background: linear-gradient(to right, #4caf50, #8bc34a);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* Conteúdo do passo: coluna 2, linha 2 */
+.fu-chargen .fu-step-content {
+  grid-column: 2;
+  grid-row: 2;
+  overflow-y: auto;
+  padding: 20px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: #5a3f10 transparent;
+}
+
+.fu-chargen .fu-step-content::-webkit-scrollbar { width: 5px; }
+.fu-chargen .fu-step-content::-webkit-scrollbar-thumb {
+  background: #5a3f10;
+  border-radius: 3px;
+}
+
+/* Rodapé: coluna 2, linha 3 */
+.fu-chargen .fu-footer {
+  grid-column: 2;
+  grid-row: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid #5a3f10;
+  gap: 8px;
+}
+
+/* ── Step tabs (sidebar) ───────────────────────────────────────────────────── */
+.fu-chargen .fu-step-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  color: #7a6040;
+  cursor: pointer;
+  font-family: "PT Sans Narrow", sans-serif;
+  font-size: 13px;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+  border-left: 3px solid transparent;
+}
+
+.fu-chargen .fu-step-tab:hover {
+  background: rgba(201, 167, 111, 0.08);
+  color: #c9a76f;
+}
+
+.fu-chargen .fu-step-tab.active {
+  background: rgba(201, 167, 111, 0.12);
+  color: #ffeec0;
+  border-left-color: #c9a76f;
+}
+
+.fu-chargen .fu-step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid #5a3f10;
+  background: rgba(0,0,0,0.3);
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: #7a6040;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.fu-chargen .fu-step-tab.active .fu-step-num {
+  background: #c9a76f;
+  border-color: #c9a76f;
+  color: #0f1a10;
+}
+
+.fu-chargen .fu-step-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── Section headings ──────────────────────────────────────────────────────── */
+.fu-chargen .fu-section h2 {
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #c9a76f;
+  letter-spacing: 0.06em;
+  margin: 0 0 4px;
+  border-bottom: 1px solid #5a3f10;
+  padding-bottom: 6px;
+}
+
+.fu-chargen .fu-section h3 {
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #c9a76f;
+  letter-spacing: 0.04em;
+  margin: 14px 0 6px;
+}
+
+.fu-chargen .fu-section h4 {
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  font-size: 14px;
+  color: #a89060;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 10px 0 4px;
+}
+
+.fu-chargen .fu-instructions {
+  font-size: 13px;
+  color: #a89060;
+  margin-bottom: 12px;
+}
+
+/* ── Form fields ───────────────────────────────────────────────────────────── */
+.fu-chargen .fu-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 16px;
+}
+
+.fu-chargen .fu-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fu-chargen .fu-field-group.full {
+  grid-column: 1 / -1;
+}
+
+.fu-chargen .fu-field-group label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #a89060;
+}
+
+.fu-chargen .fu-field-group label small {
+  font-size: 10px;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #6a5030;
+}
+
+.fu-chargen input[type="text"],
+.fu-chargen input[type="number"],
+.fu-chargen select,
+.fu-chargen textarea {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid #5a3f10;
+  border-radius: 4px;
+  color: #ffeec0;
+  padding: 6px 10px;
+  font-family: "PT Sans Narrow", sans-serif;
+  font-size: 13px;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+
+.fu-chargen input[type="text"]:focus,
+.fu-chargen input[type="number"]:focus,
+.fu-chargen select:focus,
+.fu-chargen textarea:focus {
+  outline: none;
+  border-color: #c9a76f;
+  box-shadow: 0 0 0 2px rgba(201,167,111,0.15);
+}
+
+.fu-chargen input[type="text"]::placeholder,
+.fu-chargen textarea::placeholder {
+  color: #4a3520;
+}
+
+.fu-chargen select option {
+  background: #1a2a2a;
+  color: #ffeec0;
+}
+
+.fu-chargen .fu-hint {
+  font-size: 11px;
+  color: #7a6040;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────────────── */
+.fu-chargen .fu-btn {
+  padding: 8px 18px;
+  border: 1px solid #5a3f10;
+  border-radius: 4px;
+  background: rgba(201,167,111,0.1);
+  color: #c9a76f;
+  cursor: pointer;
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.fu-chargen .fu-btn:hover {
+  background: rgba(201,167,111,0.2);
+  border-color: #c9a76f;
+  color: #ffeec0;
+}
+
+.fu-chargen .fu-btn-primary {
+  background: #c9a76f;
+  color: #0f1510;
+  border-color: #a07840;
+  font-weight: 700;
+}
+
+.fu-chargen .fu-btn-primary:hover {
+  background: #dbb87e;
+  border-color: #c9a76f;
+}
+
+.fu-chargen .fu-btn-primary:disabled {
+  background: #3a2d15;
+  color: #6a5030;
+  border-color: #3a2d15;
+  cursor: not-allowed;
+}
+
+/* Small remove buttons */
+.fu-chargen .fu-remove-class,
+.fu-chargen .fu-remove-bond {
+  padding: 2px 6px;
+  font-size: 12px;
+  border: 1px solid #5a3f10;
+  border-radius: 3px;
+  background: transparent;
+  color: #7a4040;
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s;
+}
+
+.fu-chargen .fu-remove-class:hover,
+.fu-chargen .fu-remove-bond:hover {
+  background: #7a2020;
+  border-color: #c04040;
+  color: #ffeec0;
+}
+
+/* ── Class cards ───────────────────────────────────────────────────────────── */
+.fu-chargen .fu-class-card {
+  border: 1px solid #5a3f10;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.fu-chargen .fu-class-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(201,167,111,0.1);
+  border-bottom: 1px solid #5a3f10;
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  font-size: 15px;
+  color: #c9a76f;
+}
+
+.fu-chargen .fu-class-card-body {
+  padding: 10px 12px;
+  background: rgba(0,0,0,0.15);
+}
+
+.fu-chargen .fu-level-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: #a89060;
+}
+
+.fu-chargen .fu-level-control input {
+  width: 56px !important;
+}
+
+/* Benefit badges */
+.fu-chargen .fu-benefits-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.fu-chargen .fu-badge {
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: "Yanone Kaffeesatz", sans-serif;
+}
+
+.fu-chargen .fu-badge.pv { background: rgba(76,175,80,0.25); color: #8bc34a; border: 1px solid rgba(76,175,80,0.3); }
+.fu-chargen .fu-badge.pm { background: rgba(66,165,179,0.25); color: #42a5b3; border: 1px solid rgba(66,165,179,0.3); }
+.fu-chargen .fu-badge.pi { background: rgba(201,167,111,0.2); color: #c9a76f; border: 1px solid rgba(201,167,111,0.3); }
+
+/* Powers grid */
+.fu-chargen .fu-powers-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fu-chargen .fu-power-option {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  gap: 0 8px;
+  align-items: start;
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.fu-chargen .fu-power-option:hover {
+  background: rgba(201,167,111,0.06);
+  border-color: #5a3f10;
+}
+
+.fu-chargen .fu-power-option input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  grid-row: 1;
+  grid-column: 1;
+  accent-color: #c9a76f;
+  cursor: pointer;
+}
+
+.fu-chargen .fu-power-name {
+  grid-row: 1;
+  grid-column: 2;
+  font-size: 13px;
+  color: #ffeec0;
+  font-weight: 700;
+}
+
+.fu-chargen .fu-power-desc {
+  grid-row: 2;
+  grid-column: 2;
+  font-size: 11px;
+  color: #7a6040;
+  line-height: 1.4;
+}
+
+/* Class picker (details/summary) */
+.fu-chargen .fu-class-picker {
+  margin-top: 8px;
+}
+
+.fu-chargen .fu-class-picker summary {
+  cursor: pointer;
+  color: #c9a76f;
+  font-size: 13px;
+  padding: 6px 4px;
+  user-select: none;
+  border-top: 1px solid #5a3f10;
+}
+
+.fu-chargen .fu-class-picker summary:hover { color: #ffeec0; }
+
+.fu-chargen .fu-class-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 6px;
+  padding: 10px 0 4px;
+}
+
+.fu-chargen .fu-class-tile {
+  padding: 8px 10px;
+  border: 1px solid #5a3f10;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.2);
+  color: #ffeec0;
+  cursor: pointer;
+  text-align: left;
+  font-size: 12px;
+  font-family: "PT Sans Narrow", sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.fu-chargen .fu-class-tile strong {
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  font-size: 14px;
+  color: #c9a76f;
+}
+
+.fu-chargen .fu-class-tile small {
+  font-size: 10px;
+  color: #6a5030;
+  line-height: 1.3;
+}
+
+.fu-chargen .fu-class-tile:hover {
+  background: rgba(201,167,111,0.1);
+  border-color: #c9a76f;
+}
+
+/* ── Attributes step ───────────────────────────────────────────────────────── */
+.fu-chargen .fu-profiles {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.fu-chargen .fu-profile-btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 10px 12px;
+  border: 1px solid #5a3f10;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.2);
+  color: #a89060;
+  cursor: pointer;
+  text-align: center;
+  font-family: "PT Sans Narrow", sans-serif;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: all 0.15s;
+}
+
+.fu-chargen .fu-profile-btn strong {
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  font-size: 15px;
+  color: #c9a76f;
+}
+
+.fu-chargen .fu-profile-btn .fu-profile-dice {
+  font-size: 13px;
+  color: #ffeec0;
+  font-family: "Yanone Kaffeesatz", sans-serif;
+}
+
+.fu-chargen .fu-profile-btn small { font-size: 10px; color: #6a5030; }
+
+.fu-chargen .fu-profile-btn.active {
+  background: rgba(201,167,111,0.15);
+  border-color: #c9a76f;
+  color: #ffeec0;
+}
+
+.fu-chargen .fu-profile-btn:hover {
+  background: rgba(201,167,111,0.08);
+  border-color: #9a7840;
+}
+
+.fu-chargen .fu-attr-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fu-chargen .fu-attr-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border: 1px solid #5a3f10;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.15);
+}
+
+.fu-chargen .fu-attr-label {
+  font-size: 13px;
+  color: #c9a76f;
+  flex: 1;
+}
+
+.fu-chargen .fu-attr-label em {
+  font-style: normal;
+  color: #ffeec0;
+  font-weight: 700;
+}
+
+.fu-chargen .fu-attr-label small {
+  font-size: 10px;
+  color: #6a5030;
+  display: block;
+  margin-top: 1px;
+}
+
+.fu-chargen .fu-attr-die {
+  width: 80px !important;
+  text-align: center;
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* ── Equipment step ────────────────────────────────────────────────────────── */
+.fu-chargen .fu-equipment-columns {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 16px;
+}
+
+.fu-chargen .fu-equip-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.fu-chargen .fu-equip-item:hover {
+  background: rgba(201,167,111,0.06);
+  border-color: #5a3f10;
+}
+
+.fu-chargen .fu-equip-item.selected {
+  background: rgba(201,167,111,0.12);
+  border-color: #c9a76f;
+}
+
+.fu-chargen .fu-equip-item input[type="checkbox"] {
+  width: auto;
+  flex-shrink: 0;
+  accent-color: #c9a76f;
+}
+
+.fu-chargen .fu-equip-name {
+  flex: 1;
+  color: #ffeec0;
+  font-weight: 700;
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  font-size: 14px;
+}
+
+.fu-chargen .fu-equip-stats {
+  color: #7a6040;
+  font-size: 11px;
+}
+
+.fu-chargen .fu-equip-cost {
+  color: #c9a76f;
+  font-weight: 700;
+  white-space: nowrap;
+  font-family: "Yanone Kaffeesatz", sans-serif;
+}
+
+.fu-chargen .fu-martial-tag {
+  display: inline-block;
+  padding: 0 4px;
+  border-radius: 3px;
+  background: rgba(180,80,80,0.25);
+  border: 1px solid rgba(180,80,80,0.4);
+  color: #c04040;
+  font-size: 9px;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+.fu-chargen .fu-equip-section select {
+  margin-top: 4px;
+}
+
+.fu-chargen .fu-equip-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fu-chargen .fu-equip-legend {
+  font-size: 11px;
+  color: #5a4020;
+}
+
+/* ── Bonds step ────────────────────────────────────────────────────────────── */
+.fu-chargen .fu-bond-card {
+  border: 1px solid #5a3f10;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  background: rgba(0,0,0,0.15);
+}
+
+.fu-chargen .fu-bond-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.fu-chargen .fu-bond-target {
+  flex: 1;
+  font-weight: 700;
+}
+
+.fu-chargen .fu-bond-header span {
+  font-size: 12px;
+  color: #7a6040;
+  white-space: nowrap;
+}
+
+.fu-chargen .fu-bond-strength {
+  color: #c9a76f;
+}
+
+.fu-chargen .fu-bond-emotions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.fu-chargen .fu-emotion-option {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  border: 1px solid #5a3f10;
+  background: rgba(0,0,0,0.2);
+  font-size: 11px;
+  cursor: pointer;
+  color: #7a6040;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.fu-chargen .fu-emotion-option:has(input:checked) {
+  background: rgba(201,167,111,0.2);
+  border-color: #c9a76f;
+  color: #ffeec0;
+}
+
+.fu-chargen .fu-emotion-option input[type="checkbox"] {
+  width: auto;
+  accent-color: #c9a76f;
+  margin: 0;
+}
+
+.fu-chargen .fu-add-bond {
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+.fu-chargen .fu-bond-rules {
+  font-size: 11px;
+  color: #5a4020;
+  line-height: 1.5;
+  padding: 8px;
+  border: 1px solid #3a2a08;
+  border-radius: 4px;
+  background: rgba(0,0,0,0.15);
+}
+
+/* ── Review step ───────────────────────────────────────────────────────────── */
+.fu-chargen .fu-review-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.fu-chargen .fu-review-block {
+  padding: 12px;
+  border: 1px solid #5a3f10;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.15);
+  margin-bottom: 10px;
+}
+
+.fu-chargen .fu-review-block h3 {
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  font-size: 20px;
+  color: #ffeec0;
+  margin: 0 0 4px;
+  border-bottom: 1px solid #5a3f10;
+  padding-bottom: 4px;
+}
+
+.fu-chargen .fu-review-block h4 {
+  font-size: 11px;
+  color: #a89060;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0 0 6px;
+}
+
+.fu-chargen .fu-review-block p {
+  font-size: 12px;
+  color: #a89060;
+  margin: 2px 0;
+}
+
+.fu-chargen .fu-review-block p em { color: #c9a76f; font-style: normal; }
+
+.fu-chargen .fu-stat-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.fu-chargen .fu-stat-table td {
+  padding: 3px 6px;
+  color: #a89060;
+  border-bottom: 1px solid rgba(90,63,16,0.3);
+}
+
+.fu-chargen .fu-stat-table td:last-child { text-align: right; }
+.fu-chargen .fu-stat-table strong { color: #ffeec0; }
+
+.fu-chargen .fu-attr-summary {
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  font-size: 16px;
+  color: #c9a76f;
+  letter-spacing: 0.06em;
+}
+
+.fu-chargen .fu-review-class {
+  margin-bottom: 8px;
+}
+
+.fu-chargen .fu-review-class strong {
+  color: #c9a76f;
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  font-size: 15px;
+}
+
+.fu-chargen .fu-review-class ul {
+  margin: 4px 0 0 16px;
+  padding: 0;
+  font-size: 12px;
+  color: #a89060;
+}
+
+.fu-chargen .fu-review-class li { margin: 2px 0; }
+
+/* Warning */
+.fu-chargen .fu-warning {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border: 1px solid rgba(200,80,80,0.4);
+  border-radius: 6px;
+  background: rgba(180,40,40,0.15);
+  color: #e08080;
+  font-size: 13px;
+}
+
+/* ── Muted text ────────────────────────────────────────────────────────────── */
+.fu-chargen .fu-muted { color: #5a4020; }
+
+/* ── Window chrome ─────────────────────────────────────────────────────────── */
+.fu-chargen .window-content {
+  padding: 0 !important;
+  background: #131f1f;
+  overflow: hidden;
+}
+
+.fu-chargen.window-app {
+  box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 6px rgba(201,167,111,0.1);
+}

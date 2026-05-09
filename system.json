@@ -2,7 +2,7 @@
   "id": "fabula-ultima",
   "title": "Fabula Ultima",
   "description": "Sistema completo de Fabula Ultima para Foundry VTT — edição brasileira. Inclui criação guiada de personagens, ficha completa, rolagens automáticas e automação de combate.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "compatibility": {
     "minimum": "12",
     "verified": "13",
@@ -19,7 +19,8 @@
     "styles/components/bars.css",
     "styles/components/dice.css",
     "styles/components/conditions.css",
-    "styles/components/chat.css"
+    "styles/components/chat.css",
+    "styles/components/wizard.css"
   ],
   "languages": [
     {
