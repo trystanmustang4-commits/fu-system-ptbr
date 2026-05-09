@@ -3,8 +3,10 @@ import { FU_CLASSES }        from '../static/classes.js';
 import { FU_WEAPONS, FU_ARMORS, FU_SHIELDS, calcDefenses } from '../static/equipment.js';
 import { FU_THEMES, FU_BOND_EMOTIONS, FU_ATTR_PROFILES }   from '../static/themes.js';
 
-const STARTING_LEVEL  = 5;
 const STARTING_BUDGET = 500;
+
+// Valid die combinations sorted descending (profile enforcement)
+const VALID_PROFILES = FU_ATTR_PROFILES.map(p => [...p.dice].sort((a, b) => b - a));
 
 export class CharacterCreator extends Application {
 
@@ -12,7 +14,7 @@ export class CharacterCreator extends Application {
     super();
     this._step  = 0;
     this._char  = CharacterCreator._blankCharacter();
-    this._actor = actor ?? null; // optional: pre-populate from an existing actor
+    this._actor = actor ?? null;
   }
 
   static get defaultOptions() {
@@ -20,8 +22,8 @@ export class CharacterCreator extends Application {
       id:       'fu-character-creator',
       title:    game.i18n.localize('FABULA_ULTIMA.OpenCreator'),
       template: `systems/${SYSTEM_ID}/templates/apps/character-creator.hbs`,
-      width:    860,
-      height:   660,
+      width:    880,
+      height:   680,
       resizable: true,
       classes:  ['fu-chargen', `fu-theme-${game.settings.get(SYSTEM_ID, FU_CONFIG.SETTINGS.THEME) ?? 'livro'}`],
     });
@@ -38,6 +40,7 @@ export class CharacterCreator extends Application {
       theme:       '',
       themeCustom: '',
       origin:      '',
+      level:       5,    // configurable starting level
       classes:     [],   // [{ id, levels, powers:[] }]
       attributes:  { des: 8, vig: 8, ast: 8, von: 8 },
       attrProfile: 'mediano',
@@ -66,6 +69,7 @@ export class CharacterCreator extends Application {
   _calcStats() {
     const c    = this._char;
     const attr = c.attributes;
+    const lvl  = c.level ?? 5;
 
     let pvBonus  = 0;
     let pmBonus  = 0;
@@ -81,11 +85,10 @@ export class CharacterCreator extends Application {
       for (const e of cls.initialBenefits.canEquip ?? []) canEquip.add(e);
     }
 
-    const totalLevel = STARTING_LEVEL;
-    const pvMax      = totalLevel + (5 * attr.vig) + pvBonus;
-    const pmMax      = totalLevel + (5 * attr.von) + pmBonus;
-    const piMax      = 6 + piBonus;
-    const crisis     = Math.floor(pvMax / 2);
+    const pvMax  = lvl + (5 * attr.vig) + pvBonus;
+    const pmMax  = lvl + (5 * attr.von) + pmBonus;
+    const piMax  = 6 + piBonus;
+    const crisis = Math.floor(pvMax / 2);
 
     const armor  = FU_ARMORS.find(a  => a.id  === c.equipment.armorId)  ?? FU_ARMORS[0];
     const shield = c.equipment.shieldId ? FU_SHIELDS.find(s => s.id === c.equipment.shieldId) : null;
@@ -98,59 +101,75 @@ export class CharacterCreator extends Application {
     const spent  = weaponCost + (armor?.cost ?? 0) + (shield?.cost ?? 0);
     const budget = STARTING_BUDGET - spent;
 
-    return { pvMax, crisis, pmMax, piMax, def, mdef, initiative, canEquip, spent, budget, totalLevel };
+    return { pvMax, crisis, pmMax, piMax, def, mdef, initiative, canEquip, spent, budget, totalLevel: lvl };
   }
 
   // ── Handlebars data ───────────────────────────────────────────
 
   getData() {
+    const c     = this._char;
     const stats = this._calcStats();
-    // Pré-computa índices e força dos laços para evitar traversal de @index no Handlebars
-    const bondsForTemplate = this._char.bonds.map((b, i) => ({
+    const startingLevel = c.level ?? 5;
+
+    const bondsForTemplate = c.bonds.map((b, i) => ({
       ...b,
       bondIdx:  i,
       strength: Object.values(b.emotions).filter(Boolean).length,
     }));
 
-    // Pré-computa pairKey para cada par de emoções
     const bondEmotionsForTemplate = FU_BOND_EMOTIONS.map((ep, i) => ({
       ...ep,
       pairKey: `pair${i + 1}`,
     }));
 
+    // Fix: spread def first, then override levels; keep def.powers as-is;
+    // put selected power IDs under a different key to avoid collision.
+    const selectedClasses = c.classes.map(cc => {
+      const def = FU_CLASSES.find(f => f.id === cc.id);
+      return {
+        ...def,
+        levels:          cc.levels,
+        selectedPowerIds: cc.powers,  // selected power IDs; def.powers stays intact
+      };
+    });
+
+    const totalClassLevels = c.classes.reduce((s, cc) => s + cc.levels, 0);
+    const levelsLeft       = startingLevel - totalClassLevels;
+    const canAddClass      = selectedClasses.length < 3 && levelsLeft > 0;
+
     return {
       step:     this._step,
       steps:    CharacterCreator.STEPS,
-      char:     { ...this._char, bonds: bondsForTemplate },
+      char:     { ...c, bonds: bondsForTemplate },
       stats,
-      themes:       FU_THEMES,
-      profiles:     FU_ATTR_PROFILES,
-      bondEmotions: bondEmotionsForTemplate,
-      allClasses:   FU_CLASSES,
-      allWeapons:   FU_WEAPONS,
-      allArmors:    FU_ARMORS,
-      allShields:   FU_SHIELDS,
+      startingLevel,
       startingBudget: STARTING_BUDGET,
-      startingLevel:  STARTING_LEVEL,
-      isFirst: this._step === 0,
-      isLast:  this._step === CharacterCreator.STEPS.length - 1,
-      canPrev: this._step > 0,
-      canNext: this._step < CharacterCreator.STEPS.length - 1,
-      selectedClasses: this._char.classes.map(cc => {
-        const def = FU_CLASSES.find(f => f.id === cc.id);
-        return { ...def, ...cc };
-      }),
-      totalClassLevels: this._char.classes.reduce((s, c) => s + c.levels, 0),
+      themes:         FU_THEMES,
+      profiles:       FU_ATTR_PROFILES,
+      bondEmotions:   bondEmotionsForTemplate,
+      allClasses:     FU_CLASSES,
+      allWeapons:     FU_WEAPONS,
+      allArmors:      FU_ARMORS,
+      allShields:     FU_SHIELDS,
+      selectedClasses,
+      totalClassLevels,
+      levelsLeft,
+      canAddClass,
+      isFirst:   this._step === 0,
+      isLast:    this._step === CharacterCreator.STEPS.length - 1,
+      canPrev:   this._step > 0,
+      canNext:   this._step < CharacterCreator.STEPS.length - 1,
       canCreate: this._canCreate(),
     };
   }
 
   _canCreate() {
-    const c = this._char;
-    if (!c.name?.trim()) return false;
+    const c      = this._char;
+    const lvl    = c.level ?? 5;
+    if (!c.name?.trim())     return false;
     if (!c.identity?.trim()) return false;
     const levels = c.classes.reduce((s, cc) => s + cc.levels, 0);
-    if (levels !== STARTING_LEVEL) return false;
+    if (levels !== lvl)                          return false;
     if (c.classes.length < 2 || c.classes.length > 3) return false;
     return true;
   }
@@ -167,16 +186,57 @@ export class CharacterCreator extends Application {
       if (!isNaN(idx)) { this._step = idx; this.render(); }
     });
 
+    // Generic field inputs
     html.find('.fu-field').on('change input', (e) => {
       const field = e.currentTarget.dataset.field;
-      if (field) foundry.utils.setProperty(this._char, field, e.currentTarget.value);
+      if (!field) return;
+      let val = e.currentTarget.value;
+      if (e.currentTarget.type === 'number') val = parseInt(val) || 0;
+      foundry.utils.setProperty(this._char, field, val);
       this._refreshStats(html);
+    });
+
+    // Level stepper (+/- buttons for character level)
+    html.find('.fu-level-inc').on('click', () => {
+      this._char.level = Math.min(50, (this._char.level ?? 5) + 1);
+      this.render();
+    });
+    html.find('.fu-level-dec').on('click', () => {
+      const min = Math.max(1, this._char.classes.reduce((s, c) => s + c.levels, 0));
+      this._char.level = Math.max(min, (this._char.level ?? 5) - 1);
+      this.render();
+    });
+
+    // Class level stepper (+/- buttons per class)
+    html.find('.fu-class-inc').on('click', (e) => {
+      const id  = e.currentTarget.dataset.classId;
+      const cc  = this._char.classes.find(c => c.id === id);
+      if (!cc) return;
+      const used = this._char.classes.reduce((s, c) => s + c.levels, 0);
+      const lvl  = this._char.level ?? 5;
+      if (used >= lvl) return ui.notifications.warn(`Já distribuiu todos os ${lvl} níveis.`);
+      cc.levels = Math.min(10, cc.levels + 1);
+      this._refreshStats(html);
+      this.render();
+    });
+    html.find('.fu-class-dec').on('click', (e) => {
+      const id = e.currentTarget.dataset.classId;
+      const cc = this._char.classes.find(c => c.id === id);
+      if (!cc) return;
+      if (cc.levels <= 1) return;
+      cc.levels = cc.levels - 1;
+      cc.powers = cc.powers.slice(0, cc.levels);
+      this._refreshStats(html);
+      this.render();
     });
 
     html.find('.fu-add-class').on('click', (e) => {
       const id = e.currentTarget.dataset.classId;
       if (!id || this._char.classes.find(c => c.id === id)) return;
-      if (this._char.classes.length >= 3) return ui.notifications.warn('Um personagem pode ter no máximo 3 classes.');
+      if (this._char.classes.length >= 3) return ui.notifications.warn('Máximo de 3 classes.');
+      const used = this._char.classes.reduce((s, c) => s + c.levels, 0);
+      const lvl  = this._char.level ?? 5;
+      if (used >= lvl) return ui.notifications.warn(`Todos os ${lvl} níveis já foram distribuídos.`);
       this._char.classes.push({ id, levels: 1, powers: [] });
       this.render();
     });
@@ -187,14 +247,6 @@ export class CharacterCreator extends Application {
       this.render();
     });
 
-    html.find('.fu-class-levels').on('change', (e) => {
-      const id  = e.currentTarget.dataset.classId;
-      const val = parseInt(e.currentTarget.value) || 1;
-      const cc  = this._char.classes.find(c => c.id === id);
-      if (cc) { cc.levels = Math.max(1, Math.min(10, val)); cc.powers = cc.powers.slice(0, cc.levels); }
-      this._refreshStats(html);
-    });
-
     html.find('.fu-power-checkbox').on('change', (e) => {
       const classId = e.currentTarget.dataset.classId;
       const powerId = e.currentTarget.dataset.powerId;
@@ -202,7 +254,10 @@ export class CharacterCreator extends Application {
       if (!cc) return;
       if (e.currentTarget.checked) {
         if (cc.powers.length < cc.levels) cc.powers.push(powerId);
-        else { e.currentTarget.checked = false; ui.notifications.warn('Já atingiu o limite de poderes para os níveis nessa classe.'); }
+        else {
+          e.currentTarget.checked = false;
+          ui.notifications.warn('Limite de poderes atingido para os níveis nessa classe.');
+        }
       } else {
         cc.powers = cc.powers.filter(p => p !== powerId);
       }
@@ -213,7 +268,9 @@ export class CharacterCreator extends Application {
       const profile   = FU_ATTR_PROFILES.find(p => p.id === profileId);
       if (!profile) return;
       this._char.attrProfile = profileId;
-      this._char.attributes  = { des: 0, vig: 0, ast: 0, von: 0 };
+      // Assign dice in canonical order: des, vig, ast, von — sorted desc
+      const sorted = [...profile.dice].sort((a, b) => b - a);
+      this._char.attributes = { des: sorted[0], vig: sorted[1], ast: sorted[2], von: sorted[3] };
       this.render();
     });
 
@@ -232,7 +289,7 @@ export class CharacterCreator extends Application {
       if (e.currentTarget.checked) {
         if (weapon.martial && !stats.canEquip.has(weapon.range === 'Corpo a corpo' ? 'melee_martial' : 'ranged_martial')) {
           e.currentTarget.checked = false;
-          return ui.notifications.warn(`Você precisa de uma classe que permita equipar ${weapon.range === 'Corpo a corpo' ? 'armas corpo a corpo marciais' : 'armas à distância marciais'}.`);
+          return ui.notifications.warn(`Você precisa de uma classe que permita equipar essa arma marcial.`);
         }
         if (stats.budget < weapon.cost) {
           e.currentTarget.checked = false;
@@ -251,11 +308,11 @@ export class CharacterCreator extends Application {
       const stats = this._calcStats();
       if (armor?.martial && !stats.canEquip.has('armor_martial')) {
         e.currentTarget.value = this._char.equipment.armorId;
-        return ui.notifications.warn('Você precisa de uma classe que permita equipar armaduras marciais.');
+        return ui.notifications.warn('Você precisa de uma classe que permita armaduras marciais.');
       }
-      const oldArmor          = FU_ARMORS.find(a => a.id === this._char.equipment.armorId);
-      const budgetWithoutOld  = stats.budget + (oldArmor?.cost ?? 0);
-      if (armor && budgetWithoutOld < armor.cost) {
+      const oldArmor = FU_ARMORS.find(a => a.id === this._char.equipment.armorId);
+      const freeSlot = stats.budget + (oldArmor?.cost ?? 0);
+      if (armor && freeSlot < armor.cost) {
         e.currentTarget.value = this._char.equipment.armorId;
         return ui.notifications.warn('Orçamento insuficiente para esta armadura.');
       }
@@ -269,11 +326,11 @@ export class CharacterCreator extends Application {
       const stats  = this._calcStats();
       if (shield?.martial && !stats.canEquip.has('shield_martial')) {
         e.currentTarget.value = this._char.equipment.shieldId ?? '';
-        return ui.notifications.warn('Você precisa de uma classe que permita equipar escudos marciais.');
+        return ui.notifications.warn('Você precisa de uma classe que permita escudos marciais.');
       }
-      const oldShield     = this._char.equipment.shieldId ? FU_SHIELDS.find(s => s.id === this._char.equipment.shieldId) : null;
-      const budgetWithout = stats.budget + (oldShield?.cost ?? 0);
-      if (shield && budgetWithout < shield.cost) {
+      const oldShield = this._char.equipment.shieldId ? FU_SHIELDS.find(s => s.id === this._char.equipment.shieldId) : null;
+      const freeSlot  = stats.budget + (oldShield?.cost ?? 0);
+      if (shield && freeSlot < shield.cost) {
         e.currentTarget.value = this._char.equipment.shieldId ?? '';
         return ui.notifications.warn('Orçamento insuficiente para este escudo.');
       }
@@ -340,7 +397,8 @@ export class CharacterCreator extends Application {
   }
 
   _validateStep(step) {
-    const c = this._char;
+    const c   = this._char;
+    const lvl = c.level ?? 5;
     switch (step) {
       case 0:
         if (!c.name?.trim())     { ui.notifications.warn('Insira o nome do personagem.'); return false; }
@@ -348,8 +406,8 @@ export class CharacterCreator extends Application {
         return true;
       case 1: {
         const levels = c.classes.reduce((s, cc) => s + cc.levels, 0);
-        if (c.classes.length < 2)       { ui.notifications.warn('Escolha pelo menos 2 classes.'); return false; }
-        if (levels !== STARTING_LEVEL)  { ui.notifications.warn(`Distribua exatamente ${STARTING_LEVEL} níveis (atual: ${levels}).`); return false; }
+        if (c.classes.length < 2)   { ui.notifications.warn('Escolha pelo menos 2 classes.'); return false; }
+        if (levels !== lvl)          { ui.notifications.warn(`Distribua exatamente ${lvl} níveis (atual: ${levels}).`); return false; }
         for (const cc of c.classes) {
           if (cc.powers.length !== cc.levels) {
             ui.notifications.warn(`Escolha ${cc.levels} poder(es) para ${FU_CLASSES.find(f => f.id === cc.id)?.name}.`);
@@ -359,8 +417,13 @@ export class CharacterCreator extends Application {
         return true;
       }
       case 2: {
-        const vals = Object.values(c.attributes);
-        if (vals.some(v => v === 0)) { ui.notifications.warn('Atribua o dado de cada Atributo.'); return false; }
+        const vals = Object.values(c.attributes).sort((a, b) => b - a);
+        if (vals.some(v => !v || v === 0)) { ui.notifications.warn('Atribua o dado de cada Atributo.'); return false; }
+        const matchesProfile = VALID_PROFILES.some(p => p.every((d, i) => d === vals[i]));
+        if (!matchesProfile) {
+          ui.notifications.warn('Os dados não formam um perfil válido. Use: Especializado (d10,d10,d6,d6), Mediano (d10,d8,d8,d6) ou Pau pra Toda Obra (d8,d8,d8,d8).');
+          return false;
+        }
         return true;
       }
       default:
@@ -377,8 +440,8 @@ export class CharacterCreator extends Application {
 
     const c     = this._char;
     const stats = this._calcStats();
+    const lvl   = c.level ?? 5;
 
-    // ── System data payload for CharacterData ─────────────────────
     const systemData = {
       identity:   c.identity.trim(),
       pronouns:   c.pronouns,
@@ -386,7 +449,7 @@ export class CharacterCreator extends Application {
       theme:      c.theme || c.themeCustom,
       origin:     c.origin,
       attributes: { ...c.attributes },
-      level:      STARTING_LEVEL,
+      level:      lvl,
       fabula:     3,
       zeni:       STARTING_BUDGET - stats.spent,
       pv:  { value: stats.pvMax,  max: stats.pvMax,  bonus: 0 },
@@ -402,7 +465,6 @@ export class CharacterCreator extends Application {
       biography: { value: this._buildBio(c, stats) },
     };
 
-    // ── Create Actor ──────────────────────────────────────────────
     const actor = await Actor.create({
       name:   c.name.trim(),
       type:   'character',
@@ -415,30 +477,24 @@ export class CharacterCreator extends Application {
 
     if (!actor) return;
 
-    // ── Create embedded Class Items ───────────────────────────────
-    const classItems = [];
-    for (const cc of c.classes) {
+    // Create class items
+    const classItems = c.classes.map(cc => {
       const def = FU_CLASSES.find(f => f.id === cc.id);
-      if (!def) continue;
-      classItems.push({
-        name:   def.name,
-        type:   'class',
+      if (!def) return null;
+      return {
+        name: def.name, type: 'class',
         system: {
           description: def.description,
-          level:  cc.levels,
-          benefits: {
-            pv: def.initialBenefits.pv ?? 0,
-            pm: def.initialBenefits.pm ?? 0,
-            pi: def.initialBenefits.pi ?? 0,
-          },
+          level:   cc.levels,
+          benefits: { pv: def.initialBenefits.pv ?? 0, pm: def.initialBenefits.pm ?? 0, pi: def.initialBenefits.pi ?? 0 },
           canEquip:  def.initialBenefits.canEquip  ?? [],
           canRitual: def.initialBenefits.canRitual ?? [],
         },
-      });
-    }
+      };
+    }).filter(Boolean);
     if (classItems.length) await actor.createEmbeddedDocuments('Item', classItems);
 
-    // ── Create embedded Power Items ───────────────────────────────
+    // Create power items
     const powerItems = [];
     for (const cc of c.classes) {
       const def = FU_CLASSES.find(f => f.id === cc.id);
@@ -446,84 +502,58 @@ export class CharacterCreator extends Application {
       for (const powerId of cc.powers) {
         const p = def.powers.find(x => x.id === powerId);
         if (!p) continue;
-        powerItems.push({
-          name:   p.name,
-          type:   'power',
-          system: {
-            description: p.description,
-            classId:  cc.id,
-            maxLevel: p.maxLevel,
-            level:    1,
-          },
-        });
+        powerItems.push({ name: p.name, type: 'power', system: { description: p.description, classId: cc.id, maxLevel: p.maxLevel, level: 1 } });
       }
     }
     if (powerItems.length) await actor.createEmbeddedDocuments('Item', powerItems);
 
-    // ── Create embedded Weapon Items ──────────────────────────────
-    const weaponItems = [];
-    for (const wid of c.equipment.weapons) {
+    // Create weapon items
+    const weaponItems = c.equipment.weapons.map(wid => {
       const w = FU_WEAPONS.find(x => x.id === wid);
-      if (!w) continue;
-      weaponItems.push({
-        name:   w.name,
-        type:   'weapon',
+      if (!w) return null;
+      return {
+        name: w.name, type: 'weapon',
         system: {
-          category:       w.category,
-          cost:           w.cost,
-          hands:          w.hands,
-          range:          w.range === 'Corpo a corpo' ? 'melee' : 'ranged',
-          martial:        w.martial,
-          precision:      w.precision,
-          precisionBonus: w.precisionBonus,
-          damage:         w.damage,
-          damageType:     'physical',
-          equipped:       true,
+          category: w.category, cost: w.cost, hands: w.hands,
+          range: w.range === 'Corpo a corpo' ? 'melee' : 'ranged',
+          martial: w.martial, precision: w.precision, precisionBonus: w.precisionBonus,
+          damage: w.damage, damageType: 'physical', equipped: true,
         },
-      });
-    }
+      };
+    }).filter(Boolean);
     if (weaponItems.length) await actor.createEmbeddedDocuments('Item', weaponItems);
 
-    // ── Create Armor / Shield Items ───────────────────────────────
+    // Create armor / shield items
     const equipItems = [];
     const armor = FU_ARMORS.find(a => a.id === c.equipment.armorId);
     if (armor && armor.id !== 'sem_armadura') {
       equipItems.push({
-        name: armor.name,
-        type: 'armor',
+        name: armor.name, type: 'armor',
         system: {
-          cost:               armor.cost,
-          martial:            armor.martial,
-          defFixed:           armor.defFixed ?? null,
-          defFormula:         armor.defFormula ?? 'des',
-          defBonus:           armor.defBonus ?? 0,
-          mdefFormula:        armor.mdefFormula ?? 'ast',
-          mdefBonus:          armor.mdefBonus ?? 0,
-          initiativeModifier: armor.initiativeModifier ?? 0,
-          equipped:           true,
+          cost: armor.cost, martial: armor.martial,
+          defFixed: armor.defFixed ?? null, defFormula: armor.defFormula ?? 'des', defBonus: armor.defBonus ?? 0,
+          mdefFormula: armor.mdefFormula ?? 'ast', mdefBonus: armor.mdefBonus ?? 0,
+          initiativeModifier: armor.initiativeModifier ?? 0, equipped: true,
         },
       });
     }
     const shield = c.equipment.shieldId ? FU_SHIELDS.find(s => s.id === c.equipment.shieldId) : null;
     if (shield) {
       equipItems.push({
-        name: shield.name,
-        type: 'shield',
+        name: shield.name, type: 'shield',
         system: {
-          cost:               shield.cost,
-          martial:            shield.martial,
-          defBonus:           shield.defBonus ?? 0,
-          mdefBonus:          shield.mdefBonus ?? 0,
-          initiativeModifier: shield.initiativeModifier ?? 0,
-          equipped:           true,
+          cost: shield.cost, martial: shield.martial,
+          defBonus: shield.defBonus ?? 0, mdefBonus: shield.mdefBonus ?? 0,
+          initiativeModifier: shield.initiativeModifier ?? 0, equipped: true,
         },
       });
     }
     if (equipItems.length) await actor.createEmbeddedDocuments('Item', equipItems);
 
     ui.notifications.info(`Personagem "${actor.name}" criado com sucesso!`);
-    actor.sheet?.render(true);
+    // Close wizard first, then open the sheet
     this.close();
+    actor.sheet.render(true);
   }
 
   _buildBio(c, stats) {

@@ -1,7 +1,7 @@
 {{!-- Fabula Ultima – Criador de Personagens --}}
 <div class="fu-wizard">
 
-  {{!-- ── Step tabs ─────────────────────────────────────────────── --}}
+  {{!-- ── Step sidebar ──────────────────────────────────────────── --}}
   <nav class="fu-steps">
     {{#each steps}}
     <button type="button"
@@ -13,7 +13,7 @@
     {{/each}}
   </nav>
 
-  {{!-- ── Live stat bar ────────────────────────────────────────────── --}}
+  {{!-- ── Live stat bar ─────────────────────────────────────────── --}}
   <div class="fu-statbar">
     <span title="PV máx">❤️ <strong class="fu-stat-pv">{{stats.pvMax}}</strong></span>
     <span title="Crise">⚡ <strong class="fu-stat-crisis">{{stats.crisis}}</strong></span>
@@ -25,35 +25,48 @@
     {{#if (fu_is step 3)}}
     <span title="Orçamento">
       💰 <strong class="fu-stat-budget">{{stats.budget}}</strong>z
-      <span class="fu-budget-track"><span class="fu-budget-bar" style="width:{{fu_budget_pct stats.budget 500}}%"></span></span>
+      <span class="fu-budget-track"><span class="fu-budget-bar" style="width:{{fu_budget_pct stats.budget startingBudget}}%"></span></span>
     </span>
     {{/if}}
   </div>
 
-  {{!-- ── Step content ─────────────────────────────────────────── --}}
+  {{!-- ── Step content ────────────────────────────────────────── --}}
   <div class="fu-step-content">
 
-    {{!-- ═══ PASSO 0 – IDENTIDADE ═══════════════════════════════════ --}}
+    {{!-- ═══ PASSO 0 – IDENTIDADE ══════════════════════════════════ --}}
     {{#if (fu_is step 0)}}
     <div class="fu-section">
       <h2>Identidade do Personagem</h2>
       <div class="fu-form-grid">
+
         <div class="fu-field-group full">
           <label>Nome *</label>
           <input type="text" class="fu-field" data-field="name"
             value="{{char.name}}" placeholder="Nome do personagem">
         </div>
+
         <div class="fu-field-group">
           <label>Pronomes</label>
           <input type="text" class="fu-field" data-field="pronouns"
             value="{{char.pronouns}}" placeholder="ele/dela...">
         </div>
+
+        <div class="fu-field-group">
+          <label>Nível Inicial</label>
+          <div class="fu-stepper">
+            <button type="button" class="fu-stepper-btn fu-level-dec" title="Diminuir nível">−</button>
+            <span class="fu-stepper-val">{{char.level}}</span>
+            <button type="button" class="fu-stepper-btn fu-level-inc" title="Aumentar nível">+</button>
+          </div>
+        </div>
+
         <div class="fu-field-group full">
           <label>Identidade * <small>(frase que resume quem você é)</small></label>
           <input type="text" class="fu-field" data-field="identity"
             value="{{char.identity}}"
             placeholder="Ex: Cavaleiro real · Sacerdotisa de batalha da Fé Antiga">
         </div>
+
         <div class="fu-field-group">
           <label>Tema</label>
           <select class="fu-field" data-field="theme">
@@ -66,62 +79,80 @@
           <div class="fu-hint">{{#each themes}}{{#if (fu_is ../char.theme id)}}{{description}}{{/if}}{{/each}}</div>
           {{/if}}
         </div>
+
         <div class="fu-field-group">
           <label>Origem</label>
           <input type="text" class="fu-field" data-field="origin"
             value="{{char.origin}}" placeholder="Cidade, reino, aldeia...">
         </div>
+
         <div class="fu-field-group full">
           <label>Aparência</label>
           <textarea class="fu-field" data-field="appearance"
             rows="3" placeholder="Descrição física...">{{char.appearance}}</textarea>
         </div>
+
       </div>
     </div>
     {{/if}}
 
-    {{!-- ═══ PASSO 1 – CLASSES ════════════════════════════════════════ --}}
+    {{!-- ═══ PASSO 1 – CLASSES ═══════════════════════════════════════ --}}
     {{#if (fu_is step 1)}}
     <div class="fu-section">
       <h2>Classes e Poderes</h2>
       <p class="fu-instructions">
-        Distribua exatamente <strong>5 níveis</strong> entre <strong>2 a 3 classes</strong>.
-        Usados: <strong class="fu-stat-levels">{{totalClassLevels}}</strong>/5
+        Distribua exatamente <strong>{{startingLevel}} níveis</strong> entre
+        <strong>2 a 3 classes</strong>. Usados:
+        <strong class="fu-stat-levels">{{totalClassLevels}}</strong>/{{startingLevel}}
+        {{#if (fu_gt levelsLeft 0)}}<span class="fu-levels-left">(faltam {{levelsLeft}})</span>{{/if}}
       </p>
 
+      {{!-- Classes selecionadas --}}
       {{#each selectedClasses}}
       <div class="fu-class-card selected">
         <div class="fu-class-card-header">
           <strong>{{name}}</strong>
+          <div class="fu-stepper fu-class-stepper">
+            <button type="button" class="fu-stepper-btn fu-class-dec" data-class-id="{{id}}" title="Diminuir nível">−</button>
+            <span class="fu-stepper-val">{{levels}}</span>
+            <button type="button" class="fu-stepper-btn fu-class-inc" data-class-id="{{id}}" title="Aumentar nível">+</button>
+          </div>
           <button type="button" class="fu-remove-class" data-class-id="{{id}}">✕</button>
         </div>
         <div class="fu-class-card-body">
-          <div class="fu-level-control">
-            <label>Níveis:</label>
-            <input type="number" class="fu-class-levels" data-class-id="{{id}}"
-              min="1" max="10" value="{{levels}}">
-          </div>
           <div class="fu-benefits-row">
             {{#if initialBenefits.pv}}<span class="fu-badge pv">+{{initialBenefits.pv}} PV</span>{{/if}}
             {{#if initialBenefits.pm}}<span class="fu-badge pm">+{{initialBenefits.pm}} PM</span>{{/if}}
             {{#if initialBenefits.pi}}<span class="fu-badge pi">+{{initialBenefits.pi}} PI</span>{{/if}}
           </div>
+
+          {{#if powers}}
           <div class="fu-powers-grid">
-            <p><small>Escolha <strong>{{levels}}</strong> poder(es):</small></p>
+            <p class="fu-powers-prompt">
+              <small>Escolha <strong>{{levels}}</strong> poder(es) — selecionados: {{selectedPowerIds.length}}/{{levels}}</small>
+            </p>
             {{#each powers}}
             <label class="fu-power-option">
               <input type="checkbox" class="fu-power-checkbox"
                 data-class-id="{{../id}}" data-power-id="{{id}}"
-                {{#if (fu_includes (fu_find ../../char.classes 'id' ../id 'powers') id)}}checked{{/if}}>
-              <span class="fu-power-name">{{name}} {{#if (fu_gt maxLevel 1)}}<em>×{{maxLevel}}</em>{{/if}}</span>
+                {{#if (fu_includes ../selectedPowerIds id)}}checked{{/if}}>
+              <span class="fu-power-name">
+                {{name}}
+                {{#if (fu_gt maxLevel 1)}}<em class="fu-power-rank"> ×{{maxLevel}}</em>{{/if}}
+              </span>
               <span class="fu-power-desc">{{description}}</span>
             </label>
             {{/each}}
           </div>
+          {{else}}
+          <p class="fu-muted" style="font-size:12px;margin-top:6px">Esta classe não possui poderes listados.</p>
+          {{/if}}
         </div>
       </div>
       {{/each}}
 
+      {{!-- Picker de classes: só aparece se pode adicionar mais --}}
+      {{#if canAddClass}}
       <details class="fu-class-picker">
         <summary>➕ Adicionar classe ({{selectedClasses.length}}/3)</summary>
         <div class="fu-class-list">
@@ -136,13 +167,19 @@
           {{/each}}
         </div>
       </details>
+      {{/if}}
+
     </div>
     {{/if}}
 
-    {{!-- ═══ PASSO 2 – ATRIBUTOS ══════════════════════════════════════ --}}
+    {{!-- ═══ PASSO 2 – ATRIBUTOS ═══════════════════════════════════════ --}}
     {{#if (fu_is step 2)}}
     <div class="fu-section">
       <h2>Atributos</h2>
+      <p class="fu-instructions">
+        Escolha um perfil e ajuste os dados. Os dados devem formar um perfil válido.
+      </p>
+
       <div class="fu-profiles">
         {{#each profiles}}
         <button type="button" class="fu-profile-btn {{#if (fu_is ../char.attrProfile id)}}active{{/if}}"
@@ -155,9 +192,12 @@
       </div>
 
       <div class="fu-attr-grid">
-        {{#each (fu_range 4)}}{{/each}}
         <div class="fu-attr-row">
-          <label class="fu-attr-label">🏃 Destreza <em>(DES)</em> <small>DEF, precisão</small></label>
+          <div class="fu-attr-label">
+            <span class="fu-attr-icon">🏃</span>
+            <span><strong>DES</strong> <em>Destreza</em></span>
+            <small>DEF, precisão</small>
+          </div>
           <select class="fu-attr-die" data-attr="des">
             <option value="6"  {{#if (fu_is char.attributes.des  6)}}selected{{/if}}>d6</option>
             <option value="8"  {{#if (fu_is char.attributes.des  8)}}selected{{/if}}>d8</option>
@@ -166,7 +206,11 @@
           </select>
         </div>
         <div class="fu-attr-row">
-          <label class="fu-attr-label">💪 Vigor <em>(VIG)</em> <small>PV máx</small></label>
+          <div class="fu-attr-label">
+            <span class="fu-attr-icon">💪</span>
+            <span><strong>VIG</strong> <em>Vigor</em></span>
+            <small>PV máx</small>
+          </div>
           <select class="fu-attr-die" data-attr="vig">
             <option value="6"  {{#if (fu_is char.attributes.vig  6)}}selected{{/if}}>d6</option>
             <option value="8"  {{#if (fu_is char.attributes.vig  8)}}selected{{/if}}>d8</option>
@@ -175,7 +219,11 @@
           </select>
         </div>
         <div class="fu-attr-row">
-          <label class="fu-attr-label">🔍 Astúcia <em>(AST)</em> <small>DEF.M, magia</small></label>
+          <div class="fu-attr-label">
+            <span class="fu-attr-icon">🔍</span>
+            <span><strong>AST</strong> <em>Astúcia</em></span>
+            <small>DEF.M, magia</small>
+          </div>
           <select class="fu-attr-die" data-attr="ast">
             <option value="6"  {{#if (fu_is char.attributes.ast  6)}}selected{{/if}}>d6</option>
             <option value="8"  {{#if (fu_is char.attributes.ast  8)}}selected{{/if}}>d8</option>
@@ -184,7 +232,11 @@
           </select>
         </div>
         <div class="fu-attr-row">
-          <label class="fu-attr-label">🌟 Vontade <em>(VON)</em> <small>PM máx</small></label>
+          <div class="fu-attr-label">
+            <span class="fu-attr-icon">🌟</span>
+            <span><strong>VON</strong> <em>Vontade</em></span>
+            <small>PM máx</small>
+          </div>
           <select class="fu-attr-die" data-attr="von">
             <option value="6"  {{#if (fu_is char.attributes.von  6)}}selected{{/if}}>d6</option>
             <option value="8"  {{#if (fu_is char.attributes.von  8)}}selected{{/if}}>d8</option>
@@ -193,30 +245,33 @@
           </select>
         </div>
       </div>
+
+      <div class="fu-attr-hint">
+        ⚠️ Perfis válidos: <strong>d10 d10 d6 d6</strong> · <strong>d10 d8 d8 d6</strong> · <strong>d8 d8 d8 d8</strong>
+      </div>
     </div>
     {{/if}}
 
-    {{!-- ═══ PASSO 3 – EQUIPAMENTO ════════════════════════════════════ --}}
+    {{!-- ═══ PASSO 3 – EQUIPAMENTO ═══════════════════════════════════ --}}
     {{#if (fu_is step 3)}}
     <div class="fu-section">
       <h2>Equipamento Inicial</h2>
       <p class="fu-instructions">
-        Orçamento: <strong class="fu-stat-budget">{{stats.budget}}</strong>z de 500z
-        <span class="fu-budget-track"><span class="fu-budget-bar" style="width:{{fu_budget_pct stats.budget 500}}%"></span></span>
+        Orçamento: <strong class="fu-stat-budget">{{stats.budget}}</strong>z de {{startingBudget}}z
+        <span class="fu-budget-track"><span class="fu-budget-bar" style="width:{{fu_budget_pct stats.budget startingBudget}}%"></span></span>
       </p>
 
       <div class="fu-equipment-columns">
         <div class="fu-equip-section">
           <h3>⚔️ Armas</h3>
           {{#each allWeapons}}
-          <label class="fu-equip-item {{#if martial}}martial{{/if}} {{#if (fu_includes ../char.equipment.weapons id)}}selected{{/if}}">
+          <label class="fu-equip-item {{#if (fu_includes ../char.equipment.weapons id)}}selected{{/if}}">
             <input type="checkbox" class="fu-weapon-checkbox" data-weapon-id="{{id}}"
               {{#if (fu_includes ../char.equipment.weapons id)}}checked{{/if}}>
-            <span class="fu-equip-name">{{name}} {{#if martial}}<span class="fu-martial-tag">M</span>{{/if}}</span>
-            <span class="fu-equip-stats">
-              ({{precision.[0]}}+{{precision.[1]}}){{#if precisionBonus}}+{{precisionBonus}}{{/if}}
-              · RA+{{damage}} {{damageType}} · {{range}}
-            </span>
+            <div class="fu-equip-info">
+              <span class="fu-equip-name">{{name}} {{#if martial}}<span class="fu-martial-tag">M</span>{{/if}}</span>
+              <span class="fu-equip-stats">{{precision.[0]}}+{{precision.[1]}} · RA+{{damage}} {{damageType}} · {{range}}</span>
+            </div>
             <span class="fu-equip-cost">{{cost}}z</span>
           </label>
           {{/each}}
@@ -244,42 +299,52 @@
               {{/each}}
             </select>
           </div>
-          <p class="fu-equip-legend fu-muted"><strong>[M]</strong> = Marcial</p>
+          <p class="fu-equip-legend fu-muted"><strong>[M]</strong> = Marcial (requer classe específica)</p>
         </div>
       </div>
     </div>
     {{/if}}
 
-    {{!-- ═══ PASSO 4 – LAÇOS ══════════════════════════════════════════ --}}
+    {{!-- ═══ PASSO 4 – LAÇOS ════════════════════════════════════════════ --}}
     {{#if (fu_is step 4)}}
     <div class="fu-section">
       <h2>Laços</h2>
-      <p class="fu-instructions">Crie até <strong>6 Laços</strong> com personagens ou organizações.</p>
+      <p class="fu-instructions">Crie até <strong>6 Laços</strong> com personagens, NPCs ou organizações.</p>
 
       <div class="fu-bonds-list">
         {{#each char.bonds}}
         <div class="fu-bond-card">
-          <div class="fu-bond-header">
-            <input type="text" class="fu-bond-target" data-bond-idx="{{bondIdx}}"
-              value="{{target}}" placeholder="Nome do alvo...">
-            <span>Força: <strong class="fu-bond-strength" data-bond-idx="{{bondIdx}}">
-              {{strength}}
-            </strong>/3</span>
+
+          <div class="fu-bond-target-row">
+            <div class="fu-bond-target-field">
+              <label class="fu-bond-label">Com quem é o Laço?</label>
+              <input type="text" class="fu-bond-target" data-bond-idx="{{bondIdx}}"
+                value="{{target}}" placeholder="Nome do personagem, NPC ou organização...">
+            </div>
+            <div class="fu-bond-meta">
+              <span class="fu-bond-strength-label">Força</span>
+              <strong class="fu-bond-strength" data-bond-idx="{{bondIdx}}">{{strength}}</strong>
+              <span class="fu-bond-strength-label">/3</span>
+            </div>
             <button type="button" class="fu-remove-bond" data-bond-idx="{{bondIdx}}">✕</button>
           </div>
+
           <div class="fu-bond-emotions">
             {{#each ../bondEmotions}}
-            {{#each emotions}}
-            <label class="fu-emotion-option">
-              <input type="checkbox" class="fu-bond-emotion"
-                data-bond-idx="{{../../bondIdx}}"
-                data-pair="{{../pairKey}}"
-                value="{{this}}">
-              {{this}}
-            </label>
-            {{/each}}
+            <div class="fu-emotion-pair">
+              {{#each emotions}}
+              <label class="fu-emotion-option">
+                <input type="checkbox" class="fu-bond-emotion"
+                  data-bond-idx="{{../../bondIdx}}"
+                  data-pair="{{../pairKey}}"
+                  value="{{this}}">
+                <span>{{this}}</span>
+              </label>
+              {{/each}}
+            </div>
             {{/each}}
           </div>
+
         </div>
         {{/each}}
       </div>
@@ -288,20 +353,21 @@
         ➕ Adicionar Laço ({{char.bonds.length}}/6)
       </button>
 
-      <div class="fu-bond-rules fu-muted" style="font-size:12px;margin-top:12px">
-        <p>Cada par de emoções pode ter uma ativa: <em>Admiração</em> ou <em>Inferioridade</em>;
-          <em>Lealdade</em> ou <em>Desconfiança</em>; <em>Afeto</em> ou <em>Ódio</em>.
-          Força do Laço = número de emoções ativas.</p>
+      <div class="fu-bond-rules">
+        Cada par tem uma emoção ativa: <em>Admiração</em> ou <em>Inferioridade</em> ·
+        <em>Lealdade</em> ou <em>Desconfiança</em> · <em>Afeto</em> ou <em>Ódio</em>.
+        Força do Laço = número de emoções ativas.
       </div>
     </div>
     {{/if}}
 
-    {{!-- ═══ PASSO 5 – REVISÃO ════════════════════════════════════════ --}}
+    {{!-- ═══ PASSO 5 – REVISÃO ═════════════════════════════════════════ --}}
     {{#if (fu_is step 5)}}
     <div class="fu-section fu-review">
       <h2>Revisão Final</h2>
       <div class="fu-review-columns">
         <div class="fu-review-col">
+
           <div class="fu-review-block">
             <h3>{{char.name}}</h3>
             <p><em>{{char.identity}}</em></p>
@@ -309,6 +375,7 @@
             {{#if char.theme}}<p>Tema: {{char.theme}}</p>{{/if}}
             {{#if char.origin}}<p>Origem: {{char.origin}}</p>{{/if}}
           </div>
+
           <div class="fu-review-block">
             <h4>Atributos</h4>
             <div class="fu-attr-summary">
@@ -318,10 +385,11 @@
               VON d{{char.attributes.von}}
             </div>
           </div>
+
           <div class="fu-review-block">
             <h4>Estatísticas — Nível {{stats.totalLevel}}</h4>
             <table class="fu-stat-table">
-              <tr><td>❤️ PV</td><td><strong>{{stats.pvMax}}</strong> (Crise: {{stats.crisis}})</td></tr>
+              <tr><td>❤️ PV</td><td><strong>{{stats.pvMax}}</strong> <span class="fu-muted">(Crise: {{stats.crisis}})</span></td></tr>
               <tr><td>💧 PM</td><td><strong>{{stats.pmMax}}</strong></td></tr>
               <tr><td>🎒 PI</td><td><strong>{{stats.piMax}}</strong></td></tr>
               <tr><td>🛡️ DEF / DEF.M</td><td><strong>{{stats.def}} / {{stats.mdef}}</strong></td></tr>
@@ -330,6 +398,7 @@
               <tr><td>💰 Zênites restantes</td><td><strong>{{stats.budget}}</strong></td></tr>
             </table>
           </div>
+
         </div>
 
         <div class="fu-review-col">
@@ -338,11 +407,13 @@
             {{#each selectedClasses}}
             <div class="fu-review-class">
               <strong>{{name}}</strong> — {{levels}} nível{{#if (fu_gt levels 1)}}is{{/if}}
+              {{#if selectedPowerIds.length}}
               <ul>
-                {{#each powers}}
-                <li><em>{{this}}</em></li>
-                {{/each}}
+                {{#each powers}}{{#if (fu_includes ../selectedPowerIds id)}}
+                <li>{{name}}</li>
+                {{/if}}{{/each}}
               </ul>
+              {{/if}}
             </div>
             {{/each}}
           </div>
@@ -352,7 +423,7 @@
             <h4>Laços</h4>
             <ul>
               {{#each char.bonds}}
-              <li><strong>{{target}}</strong></li>
+              <li><strong>{{target}}</strong>{{#if strength}} — Força {{strength}}{{/if}}</li>
               {{/each}}
             </ul>
           </div>
@@ -362,7 +433,7 @@
 
       {{#unless canCreate}}
       <div class="fu-warning">
-        ⚠️ Complete todos os passos: nome, identidade, 2–3 classes com 5 níveis e poderes selecionados.
+        ⚠️ Complete todos os passos: nome, identidade, 2–3 classes com {{startingLevel}} níveis e poderes selecionados.
       </div>
       {{/unless}}
     </div>
@@ -370,7 +441,7 @@
 
   </div>
 
-  {{!-- ── Footer ──────────────────────────────────────────────────── --}}
+  {{!-- ── Footer ───────────────────────────────────────────────── --}}
   <footer class="fu-footer">
     {{#if canPrev}}
     <button type="button" class="fu-btn-prev fu-btn">← Anterior</button>
