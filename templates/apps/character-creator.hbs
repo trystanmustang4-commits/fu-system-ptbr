@@ -75,9 +75,6 @@
             <option value="{{id}}" {{#if (fu_is ../char.theme id)}}selected{{/if}}>{{name}}</option>
             {{/each}}
           </select>
-          {{#if char.theme}}
-          <div class="fu-hint">{{#each themes}}{{#if (fu_is ../char.theme id)}}{{description}}{{/if}}{{/each}}</div>
-          {{/if}}
         </div>
 
         <div class="fu-field-group">
@@ -85,6 +82,12 @@
           <input type="text" class="fu-field" data-field="origin"
             value="{{char.origin}}" placeholder="Cidade, reino, aldeia...">
         </div>
+
+        {{#if char.theme}}
+        <div class="fu-field-group full fu-theme-hint">
+          {{#each themes}}{{#if (fu_is ../char.theme id)}}<em>{{description}}</em>{{/if}}{{/each}}
+        </div>
+        {{/if}}
 
         <div class="fu-field-group full">
           <label>Aparência</label>
@@ -341,12 +344,10 @@
         {{#each char.bonds}}
         <div class="fu-bond-card">
 
+          <label class="fu-bond-label">Com quem é o Laço?</label>
           <div class="fu-bond-target-row">
-            <div class="fu-bond-target-field">
-              <label class="fu-bond-label">Com quem é o Laço?</label>
-              <input type="text" class="fu-bond-target" data-bond-idx="{{bondIdx}}"
-                value="{{target}}" placeholder="Nome do personagem, NPC ou organização...">
-            </div>
+            <input type="text" class="fu-bond-target" data-bond-idx="{{bondIdx}}"
+              value="{{target}}" placeholder="Nome do personagem, NPC ou organização...">
             <div class="fu-bond-meta">
               <span class="fu-bond-strength-label">Força</span>
               <strong class="fu-bond-strength" data-bond-idx="{{bondIdx}}">{{strength}}</strong>
@@ -432,7 +433,7 @@
             <h4>Classes e Poderes</h4>
             {{#each selectedClasses}}
             <div class="fu-review-class">
-              <strong>{{name}}</strong> — {{levels}} nível{{#if (fu_gt levels 1)}}is{{/if}}
+              <strong>{{name}}</strong> — {{levels}} {{#if (fu_gt levels 1)}}níveis{{else}}nível{{/if}}
               {{#if selectedPowerIds.length}}
               <ul>
                 {{#each powers}}{{#if (fu_includes ../selectedPowerIds id)}}
