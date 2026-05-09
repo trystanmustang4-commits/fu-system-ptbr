@@ -1,77 +1,58 @@
-{{!-- Character Sheet: Header partial --}}
+{{!-- Character Sheet: Header (full-width top bar) --}}
 <header class="fu-sheet-header {{#if isCrisis}}fu-in-crisis{{/if}}">
-  <div class="fu-header-identity">
-    <img class="fu-actor-img" src="{{actor.img}}" alt="{{actor.name}}"
-         style="cursor:pointer" title="Clique para alterar imagem">
-    <div class="fu-header-fields">
+
+  {{!-- Name --}}
+  <div class="fu-header-name">
+    {{#if locked}}
+      <h2 class="fu-name-display">{{actor.name}}</h2>
+    {{else}}
       <input class="fu-name-input" type="text" name="name"
-             value="{{actor.name}}" placeholder="Nome do Personagem">
-      <div class="fu-identity-line">
-        <input class="fu-field" type="text" name="system.identity"
-               value="{{system.identity}}" placeholder="Identidade">
-        <span class="fu-sep">|</span>
-        <input class="fu-field fu-pronouns" type="text" name="system.pronouns"
-               value="{{system.pronouns}}" placeholder="Pronomes">
-      </div>
-      <div class="fu-identity-line fu-muted">
-        <span>{{fu_localize "FABULA_ULTIMA.Stats.level"}}</span>
-        <input class="fu-field" type="number" name="system.level"
-               value="{{system.level}}" min="1" max="50" style="width:48px">
-        <span class="fu-sep">|</span>
-        <span>Fábula</span>
-        <input class="fu-field" type="number" name="system.fabula"
-               value="{{system.fabula}}" min="0" style="width:42px">
-        <span class="fu-sep">|</span>
-        <span>Zênites</span>
-        <input class="fu-field" type="number" name="system.zeni"
-               value="{{system.zeni}}" min="0" style="width:60px">
-      </div>
-    </div>
+             value="{{actor.name}}" placeholder="Nome do Personagem" data-lockable="1">
+    {{/if}}
   </div>
 
-  {{!-- Resource bars --}}
-  <div class="fu-resources">
-    <div class="fu-resource-row">
-      <span class="res-label">PV</span>
-      <input class="res-input" type="number" name="system.pv.value"
-             value="{{system.pv.value}}" min="0" max="{{system.pv.max}}">
-      <span class="res-sep">/</span>
-      <span class="res-max">{{system.pv.max}}</span>
-      <div class="fu-bar-track">
-        <div class="fu-bar-fill pv" style="width:{{fu_pct system.pv.value system.pv.max}}%"></div>
-      </div>
-    </div>
-    <div class="fu-resource-row">
-      <span class="res-label">PM</span>
-      <input class="res-input" type="number" name="system.pm.value"
-             value="{{system.pm.value}}" min="0" max="{{system.pm.max}}">
-      <span class="res-sep">/</span>
-      <span class="res-max">{{system.pm.max}}</span>
-      <div class="fu-bar-track">
-        <div class="fu-bar-fill pm" style="width:{{fu_pct system.pm.value system.pm.max}}%"></div>
-      </div>
-    </div>
-    <div class="fu-resource-row">
-      <span class="res-label">PI</span>
-      <input class="res-input" type="number" name="system.pi.value"
-             value="{{system.pi.value}}" min="0" max="{{system.pi.max}}">
-      <span class="res-sep">/</span>
-      <span class="res-max">{{system.pi.max}}</span>
-      <div class="fu-bar-track">
-        <div class="fu-bar-fill pi" style="width:{{fu_pct system.pi.value system.pi.max}}%"></div>
-      </div>
-    </div>
+  {{!-- Identity + Pronouns --}}
+  <div class="fu-header-identity">
+    {{#if locked}}
+      <span class="fu-identity-display fu-muted">
+        {{system.identity}}{{#if system.pronouns}} · {{system.pronouns}}{{/if}}
+      </span>
+    {{else}}
+      <input class="fu-field" type="text" name="system.identity"
+             value="{{system.identity}}" placeholder="Identidade" data-lockable="1">
+      <input class="fu-field fu-pronouns" type="text" name="system.pronouns"
+             value="{{system.pronouns}}" placeholder="Pronomes" data-lockable="1">
+    {{/if}}
   </div>
 
-  {{!-- Conditions --}}
-  <div class="fu-conditions-panel">
-    {{#each conditions}}
-    <div class="fu-cond-toggle {{#if (fu_cond_active ../system.conditions this.id)}}active{{/if}}"
-         data-action="toggleCond" data-condition="{{this.id}}"
-         title="{{fu_localize this.label}}">
-      <img src="{{this.icon}}" alt="{{fu_localize this.label}}">
-      <span class="cond-label">{{fu_localize this.label}}</span>
-    </div>
-    {{/each}}
+  {{!-- Game-state numbers (always editable) --}}
+  <div class="fu-header-numbers">
+    <label class="fu-num-label">
+      <span>Nv</span>
+      <input type="number" name="system.level" value="{{system.level}}" min="1" max="50">
+    </label>
+    <label class="fu-num-label">
+      <span>Fábula</span>
+      <input type="number" name="system.fabula" value="{{system.fabula}}" min="0">
+    </label>
+    <label class="fu-num-label">
+      <span>Zênites</span>
+      <input type="number" name="system.zeni" value="{{system.zeni}}" min="0" style="width:64px">
+    </label>
   </div>
+
+  {{!-- Controls: lock + view mode --}}
+  <div class="fu-header-controls">
+    <button class="fu-control-btn {{#unless locked}}fu-unlocked{{/unless}}" type="button"
+            data-action="toggleLock"
+            title="{{#if locked}}Desbloquear ficha para edição{{else}}Bloquear ficha{{/if}}">
+      <i class="fas {{#if locked}}fa-lock{{else}}fa-lock-open{{/if}}"></i>
+    </button>
+    <button class="fu-control-btn {{#if isScrollView}}fu-active-view{{/if}}" type="button"
+            data-action="toggleView"
+            title="{{#if isScrollView}}Alternar para modo de abas{{else}}Alternar para modo de página completa{{/if}}">
+      <i class="fas {{#if isScrollView}}fa-list{{else}}fa-table-columns{{/if}}"></i>
+    </button>
+  </div>
+
 </header>

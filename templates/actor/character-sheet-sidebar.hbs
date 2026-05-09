@@ -1,0 +1,127 @@
+{{!-- Character Sheet: Sidebar (left column) --}}
+<aside class="fu-sidebar fu-scroll">
+
+  {{!-- Portrait --}}
+  <div class="fu-portrait-wrap">
+    <img class="fu-actor-img" src="{{actor.img}}" alt="{{actor.name}}"
+         title="{{#if isOwner}}Clique para alterar imagem{{/if}}">
+    {{#if isCrisis}}
+    <div class="fu-crisis-label">Em Crise!</div>
+    {{/if}}
+  </div>
+
+  {{!-- Attribute Dice --}}
+  <div class="fu-sidebar-section">
+    <div class="fu-sidebar-label">Atributos</div>
+    <div class="fu-attr-grid-2x2">
+      {{#each config.ATTRIBUTES}}
+      <div class="fu-attr-cell">
+        <div class="attr-label">{{@key}}</div>
+        <div class="fu-attr-die {{#unless ../locked}}attr-die{{/unless}} {{#if ../locked}}fu-attr-die--locked{{/if}}"
+             data-attr="{{@key}}"
+             title="{{fu_localize this}}{{#unless ../locked}} · Clique para ciclar{{/unless}}">
+          d{{lookup ../system.attributes @key}}
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+
+  {{!-- Derived Stats --}}
+  <div class="fu-sidebar-section">
+    <div class="fu-sidebar-label">Estatísticas</div>
+    <div class="fu-derived-row">
+      <div class="fu-derived-pill">
+        <span class="pill-label">DEF</span>
+        <span class="pill-value">{{system.def}}</span>
+      </div>
+      <div class="fu-derived-pill">
+        <span class="pill-label">DEF.M</span>
+        <span class="pill-value">{{system.mdef}}</span>
+      </div>
+      <div class="fu-derived-pill">
+        <span class="pill-label">Crise</span>
+        <span class="pill-value">{{system.crisis}}</span>
+      </div>
+      <div class="fu-derived-pill">
+        <span class="pill-label">Init</span>
+        <span class="pill-value">{{fu_format_sign system.initiative}}</span>
+      </div>
+    </div>
+  </div>
+
+  {{!-- Resource Bars --}}
+  <div class="fu-sidebar-section">
+    <div class="fu-res-row">
+      <div class="fu-res-label pv">PV</div>
+      <div class="fu-res-inputs">
+        <input class="fu-res-cur" type="number" name="system.pv.value"
+               value="{{system.pv.value}}" min="0" max="{{system.pv.max}}">
+        <span class="fu-res-sep">/</span>
+        <span class="fu-res-max">{{system.pv.max}}</span>
+      </div>
+      <div class="fu-bar-track">
+        <div class="fu-bar-fill pv" style="width:{{fu_pct system.pv.value system.pv.max}}%"></div>
+      </div>
+    </div>
+    <div class="fu-res-row">
+      <div class="fu-res-label pm">PM</div>
+      <div class="fu-res-inputs">
+        <input class="fu-res-cur" type="number" name="system.pm.value"
+               value="{{system.pm.value}}" min="0" max="{{system.pm.max}}">
+        <span class="fu-res-sep">/</span>
+        <span class="fu-res-max">{{system.pm.max}}</span>
+      </div>
+      <div class="fu-bar-track">
+        <div class="fu-bar-fill pm" style="width:{{fu_pct system.pm.value system.pm.max}}%"></div>
+      </div>
+    </div>
+    <div class="fu-res-row">
+      <div class="fu-res-label pi">PI</div>
+      <div class="fu-res-inputs">
+        <input class="fu-res-cur" type="number" name="system.pi.value"
+               value="{{system.pi.value}}" min="0" max="{{system.pi.max}}">
+        <span class="fu-res-sep">/</span>
+        <span class="fu-res-max">{{system.pi.max}}</span>
+      </div>
+      <div class="fu-bar-track">
+        <div class="fu-bar-fill pi" style="width:{{fu_pct system.pi.value system.pi.max}}%"></div>
+      </div>
+    </div>
+  </div>
+
+  {{!-- Conditions --}}
+  <div class="fu-sidebar-section">
+    <div class="fu-sidebar-label">Condições</div>
+    <div class="fu-cond-grid">
+      {{#each conditions}}
+      <div class="fu-cond-badge {{#if (fu_cond_active ../system.conditions this.id)}}active{{/if}}"
+           data-action="toggleCond" data-condition="{{this.id}}"
+           title="{{fu_localize this.label}}">
+        <img src="{{this.icon}}" alt="{{fu_localize this.label}}">
+        <span>{{fu_localize this.label}}</span>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+
+  {{!-- Quick Roll Buttons --}}
+  <div class="fu-sidebar-section">
+    <div class="fu-sidebar-label">Testes Rápidos</div>
+    <div class="fu-quickroll-grid">
+      <button class="fu-btn fu-btn-sm" type="button" data-action="rollAttr"
+              data-attr1="des" data-attr2="vig" data-flavor="DES+VIG">DES+VIG</button>
+      <button class="fu-btn fu-btn-sm" type="button" data-action="rollAttr"
+              data-attr1="des" data-attr2="ast" data-flavor="DES+AST">DES+AST</button>
+      <button class="fu-btn fu-btn-sm" type="button" data-action="rollAttr"
+              data-attr1="vig" data-attr2="vig" data-flavor="VIG+VIG">VIG+VIG</button>
+      <button class="fu-btn fu-btn-sm" type="button" data-action="rollAttr"
+              data-attr1="ast" data-attr2="von" data-flavor="AST+VON">AST+VON</button>
+      <button class="fu-btn fu-btn-sm" type="button" data-action="rollAttr"
+              data-attr1="von" data-attr2="von" data-flavor="VON+VON">VON+VON</button>
+      <button class="fu-btn fu-btn-sm" type="button" data-action="rollAttr"
+              data-attr1="ast" data-attr2="ast" data-flavor="AST+AST">AST+AST</button>
+    </div>
+  </div>
+
+</aside>

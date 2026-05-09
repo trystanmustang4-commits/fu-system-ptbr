@@ -7,6 +7,8 @@
   --fu-font-title:            "Cinzel", "Trajan Pro", serif;
 
   --fu-bg-sheet:              #f5f0e8;
+  --fu-bg-header:             rgba(200, 169, 110, 0.12);
+  --fu-bg-sidebar:            rgba(139, 100, 50, 0.06);
   --fu-bg-tab:                rgba(139, 100, 50, 0.12);
   --fu-bg-stat-box:           rgba(139, 100, 50, 0.1);
   --fu-bg-item-row:           rgba(139, 100, 50, 0.07);

@@ -440,3 +440,407 @@
 
 .fu-scroll::-webkit-scrollbar { width: 6px; }
 .fu-scroll::-webkit-scrollbar-thumb { background: var(--fu-color-border, #c8a96e); border-radius: 3px; }
+
+/* ── Character Sheet — Two-Column Grid Layout ────────────────────────────── */
+
+.fabula-ultima.character-sheet .window-content {
+  display: grid;
+  grid-template-columns: 196px 1fr;
+  grid-template-rows: auto auto 1fr;
+  height: 100%;
+  overflow: hidden;
+  gap: 0;
+  padding: 0;
+}
+
+/* Header spans both columns */
+.fabula-ultima.character-sheet [data-application-part="header"] {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+
+/* Sidebar occupies full left column (rows 2+3) */
+.fabula-ultima.character-sheet [data-application-part="sidebar"] {
+  grid-column: 1;
+  grid-row: 2 / 4;
+  border-right: 1px solid var(--fu-color-border, #c8a96e);
+  overflow-y: auto;
+}
+
+/* Nav tabs sit in right column, row 2 */
+.fabula-ultima.character-sheet [data-application-part="nav"] {
+  grid-column: 2;
+  grid-row: 2;
+  border-bottom: 2px solid var(--fu-color-border, #c8a96e);
+  padding: 6px 8px 0;
+}
+
+/* All tab content parts: right column, row 3 (stack; only one visible) */
+.fabula-ultima.character-sheet [data-application-part="main"],
+.fabula-ultima.character-sheet [data-application-part="classes"],
+.fabula-ultima.character-sheet [data-application-part="equipment"],
+.fabula-ultima.character-sheet [data-application-part="spells"],
+.fabula-ultima.character-sheet [data-application-part="bonds"],
+.fabula-ultima.character-sheet [data-application-part="biography"] {
+  grid-column: 2;
+  grid-row: 3;
+  overflow-y: auto;
+  padding: 6px 8px;
+  min-height: 0; /* allow shrink in grid */
+}
+
+/* ── Sheet Header ──────────────────────────────────────────────────────────── */
+.fabula-ultima .fu-sheet-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--fu-color-border, #c8a96e);
+  background: var(--fu-bg-header, rgba(0,0,0,0.08));
+  flex-wrap: wrap;
+}
+
+.fabula-ultima .fu-header-name {
+  flex: 0 0 auto;
+  min-width: 160px;
+}
+
+.fabula-ultima .fu-name-display {
+  font-family: var(--fu-font-title, "Cinzel", serif);
+  font-size: 16px;
+  color: var(--fu-color-title, #8b1a1a);
+  white-space: nowrap;
+}
+
+.fabula-ultima .fu-name-input {
+  font-family: var(--fu-font-title, "Cinzel", serif);
+  font-size: 15px;
+  font-weight: bold;
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed var(--fu-color-border, #c8a96e);
+  color: var(--fu-color-title, #8b1a1a);
+  padding: 2px 4px;
+  width: 100%;
+}
+
+.fabula-ultima .fu-header-identity {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.fabula-ultima .fu-identity-display {
+  font-size: 12px;
+  font-style: italic;
+}
+
+.fabula-ultima .fu-header-numbers {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fabula-ultima .fu-num-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--fu-color-text-muted, #8a7060);
+  white-space: nowrap;
+}
+
+.fabula-ultima .fu-num-label input[type="number"] {
+  width: 46px;
+  text-align: center;
+  padding: 2px 4px;
+  font-size: 13px;
+  font-weight: bold;
+  background: var(--fu-bg-input, rgba(255,255,255,0.15));
+  border: 1px solid var(--fu-color-border, #c8a96e);
+  border-radius: 4px;
+  color: var(--fu-color-text, #2c1d0e);
+}
+
+.fabula-ultima .fu-header-controls {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.fabula-ultima .fu-control-btn {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--fu-color-border, #c8a96e);
+  border-radius: 6px;
+  background: var(--fu-bg-btn, rgba(0,0,0,0.15));
+  color: var(--fu-color-text-muted, #8a7060);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.fabula-ultima .fu-control-btn:hover,
+.fabula-ultima .fu-control-btn.fu-unlocked,
+.fabula-ultima .fu-control-btn.fu-active-view {
+  background: var(--fu-color-accent, #c8a96e);
+  color: var(--fu-color-text-on-accent, #1a0e05);
+  border-color: var(--fu-color-accent-dark, #a07840);
+}
+
+/* ── Sidebar ───────────────────────────────────────────────────────────────── */
+.fabula-ultima .fu-sidebar {
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--fu-bg-sidebar, rgba(0,0,0,0.06));
+}
+
+.fabula-ultima .fu-sidebar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fabula-ultima .fu-sidebar-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--fu-color-text-muted, #8a7060);
+  border-bottom: 1px solid var(--fu-color-border, #c8a96e);
+  padding-bottom: 2px;
+  margin-bottom: 2px;
+}
+
+/* Portrait */
+.fabula-ultima .fu-portrait-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  max-height: 176px;
+  overflow: hidden;
+  border-radius: 6px;
+  border: 2px solid var(--fu-color-border, #c8a96e);
+  cursor: pointer;
+}
+
+.fabula-ultima .fu-portrait-wrap img.fu-actor-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border: none;
+  transition: filter 0.2s;
+}
+
+.fabula-ultima .fu-portrait-wrap:hover img.fu-actor-img {
+  filter: brightness(1.1);
+}
+
+.fabula-ultima .fu-crisis-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(200, 40, 40, 0.85);
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+  text-align: center;
+  padding: 2px;
+}
+
+/* 2x2 Attribute Grid for sidebar */
+.fabula-ultima .fu-attr-grid-2x2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
+.fabula-ultima .fu-attr-grid-2x2 .fu-attr-cell {
+  text-align: center;
+}
+
+.fabula-ultima .fu-attr-grid-2x2 .attr-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fu-color-text-muted, #8a7060);
+  margin-bottom: 2px;
+}
+
+.fabula-ultima .fu-attr-grid-2x2 .fu-attr-die {
+  font-size: 16px;
+  width: 100%;
+  height: 36px;
+}
+
+.fabula-ultima .fu-attr-die--locked {
+  cursor: default !important;
+}
+
+.fabula-ultima .fu-attr-die--locked:hover {
+  background: var(--fu-bg-dice, rgba(0,0,0,0.12)) !important;
+  color: var(--fu-color-dice, #c8a96e) !important;
+  transform: none !important;
+}
+
+/* Derived stats row */
+.fabula-ultima .fu-derived-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
+.fabula-ultima .fu-derived-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3px 4px;
+  background: var(--fu-bg-stat-box, rgba(0,0,0,0.12));
+  border: 1px solid var(--fu-color-border, #c8a96e);
+  border-radius: 4px;
+}
+
+.fabula-ultima .fu-derived-pill .pill-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fu-color-text-muted, #8a7060);
+}
+
+.fabula-ultima .fu-derived-pill .pill-value {
+  font-size: 15px;
+  font-family: var(--fu-font-title, "Cinzel", serif);
+  font-weight: bold;
+  color: var(--fu-color-stat-value, #2c1d0e);
+  line-height: 1.1;
+}
+
+/* Resource rows in sidebar */
+.fabula-ultima .fu-res-row {
+  display: grid;
+  grid-template-columns: 24px auto 1fr;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.fabula-ultima .fu-res-label {
+  font-size: 10px;
+  font-weight: bold;
+  text-align: right;
+}
+
+.fabula-ultima .fu-res-label.pv { color: var(--fu-color-pv, #e05555); }
+.fabula-ultima .fu-res-label.pm { color: var(--fu-color-pm, #5577e0); }
+.fabula-ultima .fu-res-label.pi { color: var(--fu-color-pi, #55a055); }
+
+.fabula-ultima .fu-res-inputs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.fabula-ultima .fu-res-cur {
+  width: 36px !important;
+  text-align: center;
+  padding: 1px 2px !important;
+  font-size: 12px !important;
+  font-weight: bold;
+}
+
+.fabula-ultima .fu-res-sep {
+  font-size: 11px;
+  color: var(--fu-color-text-muted, #8a7060);
+}
+
+.fabula-ultima .fu-res-max {
+  font-size: 11px;
+  color: var(--fu-color-text-muted, #8a7060);
+  min-width: 20px;
+}
+
+.fabula-ultima .fu-res-row .fu-bar-track {
+  height: 6px;
+  margin: 0;
+}
+
+/* Conditions grid */
+.fabula-ultima .fu-cond-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+}
+
+.fabula-ultima .fu-cond-badge {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 5px;
+  border-radius: 4px;
+  font-size: 10px;
+  cursor: pointer;
+  border: 1px solid var(--fu-color-border, #c8a96e);
+  background: var(--fu-bg-badge-inactive, rgba(0,0,0,0.08));
+  color: var(--fu-color-text-muted, #8a7060);
+  transition: background 0.2s, color 0.2s;
+  user-select: none;
+}
+
+.fabula-ultima .fu-cond-badge.active {
+  background: var(--fu-color-condition-active, #c04040);
+  color: #fff;
+  border-color: #8b1a1a;
+}
+
+.fabula-ultima .fu-cond-badge img {
+  width: 12px;
+  height: 12px;
+  border: none;
+  flex-shrink: 0;
+}
+
+/* Quick Roll grid in sidebar */
+.fabula-ultima .fu-quickroll-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+}
+
+.fabula-ultima .fu-btn-sm {
+  padding: 4px 6px;
+  font-size: 10px;
+}
+
+/* ── Tab nav inside right column ──────────────────────────────────────────── */
+.fabula-ultima [data-application-part="nav"] .fu-tabs {
+  border-bottom: none;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+/* ── Tab body scroll ───────────────────────────────────────────────────────── */
+.fabula-ultima .fu-tab-body {
+  padding: 4px 2px;
+}
+
+/* ── Scroll view: sections separated ─────────────────────────────────────── */
+.fabula-ultima .fu-tab-body + .fu-tab-body {
+  border-top: 1px solid var(--fu-color-border, #c8a96e);
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+/* ── Misc adjustments ─────────────────────────────────────────────────────── */
+.fabula-ultima .fu-muted { color: var(--fu-color-text-muted, #8a7060); }
+.fabula-ultima .fu-empty-notice { font-size: 12px; font-style: italic; padding: 4px 0; }
+.fabula-ultima .fu-sep { color: var(--fu-color-text-muted, #8a7060); }
+.fabula-ultima .fu-field { flex: 1; min-width: 0; }

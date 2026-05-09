@@ -14,7 +14,7 @@ const TABS = {
 export class FUCharacterSheet extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
     classes: ["fabula-ultima", "actor-sheet", "character-sheet"],
-    position: { width: 780, height: 700 },
+    position: { width: 820, height: 680 },
     window: { resizable: true },
     actions: {
       rollAttr:      FUCharacterSheet._onRollAttr,
@@ -27,6 +27,8 @@ export class FUCharacterSheet extends HandlebarsApplicationMixin(ApplicationV2) 
       deleteItem:    FUCharacterSheet._onDeleteItem,
       editItem:      FUCharacterSheet._onEditItem,
       openCreator:   FUCharacterSheet._onOpenCreator,
+      toggleLock:    FUCharacterSheet._onToggleLock,
+      toggleView:    FUCharacterSheet._onToggleView,
     },
   };
 
@@ -34,7 +36,10 @@ export class FUCharacterSheet extends HandlebarsApplicationMixin(ApplicationV2) 
     header: {
       template: `systems/${SYSTEM_ID}/templates/actor/character-sheet-header.hbs`,
     },
-    tabs: {
+    sidebar: {
+      template: `systems/${SYSTEM_ID}/templates/actor/character-sheet-sidebar.hbs`,
+    },
+    nav: {
       template: `systems/${SYSTEM_ID}/templates/actor/character-sheet-tabs.hbs`,
     },
     main: {
@@ -58,6 +63,8 @@ export class FUCharacterSheet extends HandlebarsApplicationMixin(ApplicationV2) 
   };
 
   tabGroups = { primary: "main" };
+  _locked = true;
+  _viewMode = "tabs"; // "tabs" | "scroll"
 
   get title() {
     return `${this.actor.name} — ${game.i18n.localize("FABULA_ULTIMA.Sheet.Title")}`;
@@ -72,7 +79,6 @@ export class FUCharacterSheet extends HandlebarsApplicationMixin(ApplicationV2) 
     const system  = actor.system;
     const isOwner = actor.isOwner;
 
-    // Partition items by type
     const classes    = actor.items.filter(i => i.type === "class");
     const powers     = actor.items.filter(i => i.type === "power");
     const weapons    = actor.items.filter(i => i.type === "weapon");
@@ -82,11 +88,9 @@ export class FUCharacterSheet extends HandlebarsApplicationMixin(ApplicationV2) 
     const consumables= actor.items.filter(i => i.type === "consumable");
     const misc       = actor.items.filter(i => i.type === "misc");
 
-    // Enrich HTML descriptions for biography/notes
     const biography  = await TextEditor.enrichHTML(system.biography?.value ?? "", { async: true, relativeTo: actor });
     const notes      = await TextEditor.enrichHTML(system.notes?.value      ?? "", { async: true, relativeTo: actor });
 
-    // Build tab list
     const tabs = Object.fromEntries(
       Object.entries(TABS).map(([key, tab]) => [
         key,
@@ -94,7 +98,6 @@ export class FUCharacterSheet extends HandlebarsApplicationMixin(ApplicationV2) 
       ])
     );
 
-    // Theme class for CSS
     const theme = game.settings.get(SYSTEM_ID, FU_CONFIG.SETTINGS.THEME) ?? "livro";
 
     return {
@@ -104,8 +107,10 @@ export class FUCharacterSheet extends HandlebarsApplicationMixin(ApplicationV2) 
       config: FU_CONFIG,
       conditions: FU_CONFIG.CONDITIONS,
       attributes: FU_CONFIG.ATTRIBUTES,
-      isCrisis:  system.pv.value <= system.crisis,
-      isVillain: system.isVillain,
+      isCrisis:    system.pv.value <= system.crisis,
+      isVillain:   system.isVillain,
+      locked:      this._locked,
+      isScrollView: this._viewMode === "scroll",
     };
   }
 
@@ -122,41 +127,40 @@ export class FUCharacterSheet extends HandlebarsApplicationMixin(ApplicationV2) 
   _activateListeners() {
     const html = this.element;
 
-    // Sync tab visibility (hides non-active tab bodies on every render)
-    for (const [group, tab] of Object.entries(this.tabGroups)) {
-      this.changeTab(tab, group, { force: true });
+    // Tab sync or scroll mode
+    if (this._viewMode === "scroll") {
+      html.querySelector("[data-application-part='nav']")?.setAttribute("hidden", "");
+      html.querySelectorAll("[data-tab][data-group='primary']").forEach(el => el.removeAttribute("hidden"));
+    } else {
+      html.querySelector("[data-application-part='nav']")?.removeAttribute("hidden");
+      for (const [group, tab] of Object.entries(this.tabGroups)) {
+        this.changeTab(tab, group, { force: true });
+      }
     }
 
-    // Global handler: any input/select/textarea with a `name` attribute auto-saves on change
+    // Auto-save: any named input/select/textarea
     html.addEventListener("change", ev => {
       const el = ev.target;
       if (!el.name) return;
+      // Respect lock for character definition fields (not game-state fields)
+      if (this._locked && el.dataset.lockable) return;
       const value = el.type === "checkbox" ? el.checked
                   : el.type === "number"   ? Number(el.value)
                   : el.value;
       this.actor.update({ [el.name]: value });
     });
 
-    // Legacy data-path inputs (e.g. villain fields)
-    html.querySelectorAll("[data-path]").forEach(el => {
-      el.addEventListener("change", ev => {
-        const path = ev.currentTarget.dataset.path;
-        const val  = ev.currentTarget.type === "checkbox" ? ev.currentTarget.checked
-                   : ev.currentTarget.type === "number"   ? Number(ev.currentTarget.value)
-                   : ev.currentTarget.value;
-        this.actor.update({ [path]: val });
-      });
-    });
-
     // Tab switching
     html.querySelectorAll(".fu-tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
+        this.tabGroups[btn.dataset.group] = btn.dataset.tab;
         this.changeTab(btn.dataset.tab, btn.dataset.group);
       });
     });
 
-    // Actor image — open file picker
+    // Actor image picker
     html.querySelector(".fu-actor-img")?.addEventListener("click", () => {
+      if (!this.actor.isOwner) return;
       new FilePicker({
         type: "image",
         current: this.actor.img,
@@ -164,9 +168,10 @@ export class FUCharacterSheet extends HandlebarsApplicationMixin(ApplicationV2) 
       }).browse();
     });
 
-    // Attribute die cycling (click to cycle d6→d8→d10→d12)
+    // Attribute die cycling — only when unlocked
     html.querySelectorAll(".attr-die").forEach(el => {
       el.addEventListener("click", ev => {
+        if (this._locked) return;
         const attr  = ev.currentTarget.dataset.attr;
         const cycle = [6, 8, 10, 12];
         const cur   = this.actor.system.attributes[attr] ?? 8;
@@ -177,6 +182,16 @@ export class FUCharacterSheet extends HandlebarsApplicationMixin(ApplicationV2) 
   }
 
   // ── Static action handlers ─────────────────────────────────────
+
+  static _onToggleLock(event, target) {
+    this._locked = !this._locked;
+    this.render();
+  }
+
+  static _onToggleView(event, target) {
+    this._viewMode = this._viewMode === "tabs" ? "scroll" : "tabs";
+    this.render();
+  }
 
   static async _onRollAttr(event, target) {
     event.preventDefault();

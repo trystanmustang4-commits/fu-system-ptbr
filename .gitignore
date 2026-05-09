@@ -17,3 +17,6 @@ Thumbs.db
 _pdfs-referencia/
 *.pdf
 *.zip
+
+# Notas internas de desenvolvimento
+CLAUDE.md

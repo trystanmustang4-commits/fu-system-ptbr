@@ -208,6 +208,7 @@ async function _preloadTemplates() {
   const base = `systems/${SYSTEM_ID}/templates`;
   return loadTemplates([
     `${base}/actor/character-sheet-header.hbs`,
+    `${base}/actor/character-sheet-sidebar.hbs`,
     `${base}/actor/character-sheet-tabs.hbs`,
     `${base}/actor/tabs/tab-main.hbs`,
     `${base}/actor/tabs/tab-classes.hbs`,
