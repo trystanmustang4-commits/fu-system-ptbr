@@ -99,7 +99,17 @@
     {{!-- ═══ PASSO 1 – CLASSES ═══════════════════════════════════════ --}}
     {{#if (fu_is step 1)}}
     <div class="fu-section">
-      <h2>Classes e Poderes</h2>
+      <div class="fu-classes-header-row">
+        <h2>Classes e Poderes</h2>
+        <div class="fu-classes-level-bar">
+          <span class="fu-classes-level-label">Nível:</span>
+          <div class="fu-stepper">
+            <button type="button" class="fu-stepper-btn fu-level-dec" title="Diminuir nível">−</button>
+            <span class="fu-stepper-val">{{char.level}}</span>
+            <button type="button" class="fu-stepper-btn fu-level-inc" title="Aumentar nível">+</button>
+          </div>
+        </div>
+      </div>
       <p class="fu-instructions">
         Distribua exatamente <strong>{{startingLevel}} níveis</strong> entre
         <strong>2 a 3 classes</strong>. Usados:
