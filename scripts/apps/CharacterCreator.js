@@ -105,14 +105,27 @@ export class CharacterCreator extends Application {
 
   getData() {
     const stats = this._calcStats();
+    // Pré-computa índices e força dos laços para evitar traversal de @index no Handlebars
+    const bondsForTemplate = this._char.bonds.map((b, i) => ({
+      ...b,
+      bondIdx:  i,
+      strength: Object.values(b.emotions).filter(Boolean).length,
+    }));
+
+    // Pré-computa pairKey para cada par de emoções
+    const bondEmotionsForTemplate = FU_BOND_EMOTIONS.map((ep, i) => ({
+      ...ep,
+      pairKey: `pair${i + 1}`,
+    }));
+
     return {
       step:     this._step,
       steps:    CharacterCreator.STEPS,
-      char:     this._char,
+      char:     { ...this._char, bonds: bondsForTemplate },
       stats,
       themes:       FU_THEMES,
       profiles:     FU_ATTR_PROFILES,
-      bondEmotions: FU_BOND_EMOTIONS,
+      bondEmotions: bondEmotionsForTemplate,
       allClasses:   FU_CLASSES,
       allWeapons:   FU_WEAPONS,
       allArmors:    FU_ARMORS,

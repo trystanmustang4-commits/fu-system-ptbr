@@ -260,20 +260,20 @@
         {{#each char.bonds}}
         <div class="fu-bond-card">
           <div class="fu-bond-header">
-            <input type="text" class="fu-bond-target" data-bond-idx="{{@index}}"
+            <input type="text" class="fu-bond-target" data-bond-idx="{{bondIdx}}"
               value="{{target}}" placeholder="Nome do alvo...">
-            <span>Força: <strong class="fu-bond-strength" data-bond-idx="{{@index}}">
-              {{fu_sum emotions "length"}}
+            <span>Força: <strong class="fu-bond-strength" data-bond-idx="{{bondIdx}}">
+              {{strength}}
             </strong>/3</span>
-            <button type="button" class="fu-remove-bond" data-bond-idx="{{@index}}">✕</button>
+            <button type="button" class="fu-remove-bond" data-bond-idx="{{bondIdx}}">✕</button>
           </div>
           <div class="fu-bond-emotions">
             {{#each ../bondEmotions}}
             {{#each emotions}}
             <label class="fu-emotion-option">
               <input type="checkbox" class="fu-bond-emotion"
-                data-bond-idx="{{../../@index}}"
-                data-pair="pair{{fu_add @../index 1}}"
+                data-bond-idx="{{../../bondIdx}}"
+                data-pair="{{../pairKey}}"
                 value="{{this}}">
               {{this}}
             </label>
