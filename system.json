@@ -9,7 +9,7 @@
     "maximum": "14"
   },
   "authors": [
-    { "name": "", "email": "" }
+    { "name": "Danyel Ribeiro", "email": "danyelribeiromtg@gmail.com" }
   ],
   "esmodules": ["scripts/main.js"],
   "styles": [
