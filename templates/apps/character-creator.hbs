@@ -153,16 +153,32 @@
               <small>Escolha <strong>{{activeClass.levels}}</strong> poder(es) — selecionados: {{activeClass.selectedPowerIds.length}}/{{activeClass.levels}}</small>
             </p>
             {{#each activeClass.powers}}
+            {{#if (fu_gt maxLevel 1)}}
+            {{!-- Poder com múltiplos níveis: exibe stepper −/+ --}}
+            <div class="fu-power-option fu-power-option-multi">
+              <div class="fu-stepper fu-power-rank-stepper">
+                <button type="button" class="fu-stepper-btn fu-power-rank-dec"
+                  data-class-id="{{../activeClass.id}}" data-power-id="{{id}}">−</button>
+                <span class="fu-stepper-val">{{rank}}</span>
+                <button type="button" class="fu-stepper-btn fu-power-rank-inc"
+                  data-class-id="{{../activeClass.id}}" data-power-id="{{id}}"
+                  data-max-level="{{maxLevel}}">+</button>
+              </div>
+              <div class="fu-power-info">
+                <span class="fu-power-name">{{name}} <em class="fu-power-rank-label">×{{maxLevel}}</em></span>
+                <span class="fu-power-desc">{{description}}</span>
+              </div>
+            </div>
+            {{else}}
+            {{!-- Poder simples: checkbox --}}
             <label class="fu-power-option">
               <input type="checkbox" class="fu-power-checkbox"
                 data-class-id="{{../activeClass.id}}" data-power-id="{{id}}"
                 {{#if (fu_includes ../activeClass.selectedPowerIds id)}}checked{{/if}}>
-              <span class="fu-power-name">
-                {{name}}
-                {{#if (fu_gt maxLevel 1)}}<em class="fu-power-rank"> ×{{maxLevel}}</em>{{/if}}
-              </span>
+              <span class="fu-power-name">{{name}}</span>
               <span class="fu-power-desc">{{description}}</span>
             </label>
+            {{/if}}
             {{/each}}
           </div>
           {{else}}

@@ -2,8 +2,8 @@
 
 .fu-theme-jrpg .fabula-ultima,
 .fu-theme-jrpg.fabula-ultima {
-  --fu-font-body:             "PT Sans Narrow", "Segoe UI", "Noto Sans", sans-serif;
-  --fu-font-title:            "Yanone Kaffeesatz", "Cinzel", "Exo 2", sans-serif;
+  --fu-font-body:             "Exo 2", "Segoe UI", "Noto Sans", sans-serif;
+  --fu-font-title:            "Exo 2", "Cinzel", sans-serif;
 
   --fu-bg-sheet:              #1a2a2a;
   --fu-bg-header:             rgba(0, 0, 0, 0.35);
@@ -42,8 +42,8 @@
   --fu-color-bond-active:     #7a5f30;
 }
 
-/* Google Fonts: PT Sans Narrow + Yanone Kaffeesatz */
-@import url("https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=Yanone+Kaffeesatz:wght@300;400;600;700&display=swap");
+/* Google Fonts: Exo 2 */
+@import url("https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap");
 
 /* Window background */
 .fu-theme-jrpg .window-content {

@@ -139,9 +139,16 @@ export class CharacterCreator extends Application {
     const canAddClass      = selectedClasses.length < 3 && levelsLeft > 0;
 
     // Clamp active class index in case classes were removed
-    const activeClassIdx = Math.min(this._activeClassIdx, Math.max(0, selectedClasses.length - 1));
-    this._activeClassIdx = activeClassIdx;
-    const activeClass    = selectedClasses[activeClassIdx] ?? null;
+    const activeClassIdx  = Math.min(this._activeClassIdx, Math.max(0, selectedClasses.length - 1));
+    this._activeClassIdx  = activeClassIdx;
+    const activeClassBase = selectedClasses[activeClassIdx] ?? null;
+    const activeClass     = activeClassBase ? {
+      ...activeClassBase,
+      powers: (activeClassBase.powers || []).map(p => ({
+        ...p,
+        rank: activeClassBase.selectedPowerIds.filter(id => id === p.id).length,
+      })),
+    } : null;
 
     return {
       step:     this._step,
@@ -276,6 +283,28 @@ export class CharacterCreator extends Application {
       } else {
         cc.powers = cc.powers.filter(p => p !== powerId);
       }
+    });
+
+    html.find('.fu-power-rank-inc').on('click', (e) => {
+      const classId  = e.currentTarget.dataset.classId;
+      const powerId  = e.currentTarget.dataset.powerId;
+      const maxLevel = parseInt(e.currentTarget.dataset.maxLevel) || 1;
+      const cc = this._char.classes.find(c => c.id === classId);
+      if (!cc) return;
+      const rank = cc.powers.filter(id => id === powerId).length;
+      if (rank >= maxLevel) return ui.notifications.warn(`Nível máximo desse poder é ×${maxLevel}.`);
+      if (cc.powers.length >= cc.levels) return ui.notifications.warn('Limite de poderes atingido para os níveis nessa classe.');
+      cc.powers.push(powerId);
+      this.render();
+    });
+
+    html.find('.fu-power-rank-dec').on('click', (e) => {
+      const classId = e.currentTarget.dataset.classId;
+      const powerId = e.currentTarget.dataset.powerId;
+      const cc = this._char.classes.find(c => c.id === classId);
+      if (!cc) return;
+      const idx = cc.powers.lastIndexOf(powerId);
+      if (idx !== -1) { cc.powers.splice(idx, 1); this.render(); }
     });
 
     html.find('.fu-profile-btn').on('click', (e) => {
